@@ -1,11 +1,114 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// サーバーサイドの処理
+import '../styles/global.css'; // 必ずTailwindのCSSを読み込む
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>darlin. / FEEL LIKE MAKIN' LOVE / EDIE </title>
+</head>
+
+<body class="bg-white text-stone-950 font-sans relative overflow-x-hidden min-h-screen">
+  
+	<nav class="fixed top-0 left-0 w-full backdrop-blur-sm bg-white/70 grid grid-cols-3 items-center px-6 md:px-12 py-7 md:py-4 border-b border-stone-100 z-50">
+    
+		<div class="justify-self-start flex items-center">
+		  <button id="menu-open" class="flex flex-col gap-1.5 p-2 md:hidden" aria-label="Menu">
+			<span class="w-5 h-[1px] bg-stone-950"></span>
+			<span class="w-5 h-[1px] bg-stone-950"></span>
+		  </button>
+		  
+		  <a href="#" class="hidden md:flex hover:opacity-70 transition-opacity">
+			<img src="/logo.png" alt="darlin. logo" class="h-9 w-auto object-contain" />
+		  </a>
+		</div>
+	  
+		<div class="justify-self-center flex items-center">
+		  <div class="hidden md:flex gap-10 text-[12px] tracking-[0.2em] text-stone-600">
+			<a href="#" class="hover:text-stone-950 transition-colors">Home</a>
+			<a href="#" class="hover:text-stone-950 transition-colors">Menu</a>
+			<a href="#" class="hover:text-stone-950 transition-colors">Staff</a>
+			<a href="#" class="hover:text-stone-950 transition-colors">Blog</a>
+			<a href="#" class="hover:text-stone-950 transition-colors">About</a>
+		  </div>
+		</div>
+	  
+		<div class="justify-self-end flex items-center">
+		  <div class="md:hidden w-9"></div> 
+		  
+		  <a 
+			href="#" 
+			class="hidden md:flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-5 py-2 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
+		  >
+			RESERVE
+		  </a>
+		</div>
+	
+		<a href="#" class="md:hidden hover:opacity-70 transition-opacity absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+		  <img src="/logo.png" alt="darlin. logo" class="h-14 w-auto object-contain" />
+		</a>
+	
+	</nav>
+
+  <div id="menu-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-md z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 md:hidden">
+    <button id="menu-close" class="absolute top-6 left-6 p-2 text-stone-950 text-xl font-light">×</button>
+    
+    <div class="flex flex-col items-center gap-10 text-center">
+      <div class="flex flex-col gap-8 text-sm tracking-[0.25em] font-light text-stone-600">
+        <a href="#" class="hover:text-stone-950 transition-colors">HOME</a>
+        <a href="#" class="hover:text-stone-500 transition-colors">MENU</a>
+        <a href="#" class="hover:text-stone-500 transition-colors">STAFF</a>
+        <a href="#" class="hover:text-stone-500 transition-colors">BLOG</a>
+        <a href="#" class="hover:text-stone-500 transition-colors">ABOUT</a>
+      </div>
+
+      <a 
+        href="#" 
+        class="border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-8 py-3 rounded-full bg-transparent shadow-sm mt-4 hover:bg-stone-950 hover:text-white transition-colors duration-300"
+      >
+        RESERVE
+      </a>
+    </div>
+  </div>
+
+  <main class="pt-16 md:pt-28 pb-24 min-h-screen bg-white text-stone-950 font-sans flex flex-col items-center justify-center relative">
+    
+    <div class="w-[320px] h-[426px] md:w-[450px] md:h-[600px] flex-shrink-0 border border-stone-100 shadow-sm overflow-hidden">
+      <img 
+        src="/pic02.png" 
+        alt="darlin. main visual" 
+        class="w-full h-full object-cover" 
+      />
+    </div>
+
+    <div class="absolute bottom-6 left-0 w-full text-center px-4">
+      <p class="text-[7px] md:text-[9px] tracking-[0.4em] text-stone-400 uppercase leading-none">
+        Copyrights © darlin. All Rights Reserved.
+      </p>
+    </div>
+  
+  </main>
+
+  <script>
+    const openBtn = document.getElementById('menu-open');
+    const closeBtn = document.getElementById('menu-close');
+    const overlay = document.getElementById('menu-overlay');
+
+    if (openBtn && closeBtn && overlay) {
+      openBtn.addEventListener('click', () => {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+      });
+    }
+  </script>
+
+</body>
+</html>
