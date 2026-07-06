@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  prev?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav aria-label="前後の記事" class="grid grid-cols-2 mt-24 gap-6">
+  <div>
+    {prev && (
+      <a href={`/blog/${prev.id}/`} class="group block">
+        <p class="text-[10px] tracking-[0.2em] text-stone-400 mb-2">← Prev</p>
+      </a>
+    )}
+  </div>
+
+  <div class="text-right">
+    {next && (
+      <a href={`/blog/${next.id}/`} class="group block">
+        <p class="text-[10px] tracking-[0.2em] text-stone-400 mb-2">Next →</p>
+      </a>
+    )}
+  </div>
+</nav>

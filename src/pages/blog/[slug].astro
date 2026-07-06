@@ -1,0 +1,80 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PostNav from '../../components/blog/PostNav.astro';
+import { formatDate, getSortedPosts } from '../../lib/blog';
+
+export const getStaticPaths = (async () => {
+  const posts = await getSortedPosts();
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prev: posts[index + 1],
+      next: posts[index - 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  prev?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} | Blog | darlin. / FEEL LIKE MAKIN' LOVE / EDIE`}>
+  <main class="pt-28 md:pt-36 pb-10 px-6 md:px-12 max-w-2xl mx-auto">
+    <div class="max-w-[500px] mx-auto">
+      <a href="/blog/" class="text-xs tracking-[0.15em] text-stone-400 hover:text-stone-950 transition-colors">
+        ← Back
+      </a>
+
+      <h1 class="text-[18px] md:text-[21px] font-medium tracking-wide text-stone-950 mt-6">
+        {post.data.title}
+      </h1>
+
+      <hr class="my-3 border-stone-300" />
+
+      <p class="mt-5 text-xs text-stone-400">{post.data.author}</p>
+      <p class="mt-1 text-xs tracking-[0.00em] text-stone-400 uppercase">{formatDate(post.data.publishDate)}</p>
+
+      <div class="mt-10 border border-stone-100 shadow-sm overflow-hidden">
+        <img src={post.data.eyecatch} alt={post.data.title} class="w-full h-auto block" />
+      </div>
+
+      <div class="blog-content mt-10 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]">
+        <Content />
+      </div>
+
+      <PostNav prev={prev} next={next} />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .blog-content :global(p) {
+    margin-bottom: 1.5em;
+  }
+  .blog-content :global(h2) {
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+    color: #1c1917;
+  }
+  .blog-content :global(ul) {
+    list-style: disc;
+    padding-left: 1.25em;
+    margin-bottom: 1.5em;
+  }
+  .blog-content :global(li) {
+    margin-bottom: 0.5em;
+  }
+</style>

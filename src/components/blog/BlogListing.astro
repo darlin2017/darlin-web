@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { ArchiveGroup } from '../../lib/blog';
+import BlogCard from './BlogCard.astro';
+import ArchiveList from './ArchiveList.astro';
+import Pagination from './Pagination.astro';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  archiveGroups: ArchiveGroup[];
+  pagination?: { currentPage: number; lastPage: number };
+}
+
+const { posts, archiveGroups, pagination } = Astro.props;
+---
+
+<main class="pt-28 md:pt-28 pb-12 px-6 md:px-12 max-w-2xl mx-auto">
+  <h1 class="text-2xl md:text-3xl font-medium tracking-wide text-stone-950 mb-2 text-center">Blog</h1>
+
+  <div class="mb-6">
+    <ArchiveList groups={archiveGroups} />
+  </div>
+
+  {posts.length > 0 ? (
+    <div class="flex flex-col gap-12">
+      {posts.map((post) => <BlogCard post={post} />)}
+    </div>
+  ) : (
+    <p class="text-sm text-stone-400">記事がありません。</p>
+  )}
+
+  {pagination && <Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} />}
+</main>

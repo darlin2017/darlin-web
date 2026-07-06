@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../../lib/blog';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+---
+
+<article>
+  <a href={`/blog/${post.id}/`} class="group block">
+    <div class="max-w-[500px] mx-auto">
+      <div class="border border-stone-100 shadow-sm overflow-hidden">
+        <img
+          src={post.data.eyecatch}
+          alt={post.data.title}
+          class="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-500"
+        />
+      </div>
+
+      <h2 class="mt-2 text-base md:text-base font-medium tracking-wide text-stone-950 group-hover:opacity-60 transition-opacity">
+        {post.data.title}
+      </h2>
+
+      <p class="mt-1 text-xs text-stone-400">
+        {post.data.author}
+      </p>
+
+      <p class="mt-1 text-xs tracking-[0.00em] text-stone-400 uppercase">
+        {formatDate(post.data.publishDate)}
+      </p>
+    </div>
+  </a>
+</article>

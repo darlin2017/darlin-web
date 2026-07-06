@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogListing from '../../components/blog/BlogListing.astro';
+import { getSortedPosts, getArchiveGroups, PAGE_SIZE } from '../../lib/blog';
+
+const allPosts = await getSortedPosts();
+const posts = allPosts.slice(0, PAGE_SIZE);
+const archiveGroups = getArchiveGroups(allPosts);
+const lastPage = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+---
+
+<Layout title="Blog | darlin. / FEEL LIKE MAKIN' LOVE / EDIE">
+  <BlogListing
+    posts={posts}
+    archiveGroups={archiveGroups}
+    pagination={{ currentPage: 1, lastPage }}
+  />
+</Layout>

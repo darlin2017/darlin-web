@@ -1,0 +1,54 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+}
+
+const { currentPage, lastPage } = Astro.props;
+
+function pageUrl(page: number): string {
+  return page <= 1 ? '/blog/' : `/blog/page/${page}/`;
+}
+
+const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
+---
+
+{lastPage > 1 && (
+  <nav aria-label="ページネーション" class="flex items-center justify-center gap-6 pt-20">
+    <a
+      href={pageUrl(currentPage - 1)}
+      class:list={[
+        'text-xs tracking-[0.15em] transition-colors',
+        currentPage <= 1 ? 'pointer-events-none text-stone-300' : 'text-stone-600 hover:text-stone-950',
+      ]}
+      aria-disabled={currentPage <= 1}
+    >
+      Prev
+    </a>
+
+    <div class="flex items-center gap-4">
+      {pages.map((page) => (
+        <a
+          href={pageUrl(page)}
+          class:list={[
+            'text-xs tracking-[0.1em]',
+            page === currentPage ? 'text-stone-950 underline underline-offset-4' : 'text-stone-400 hover:text-stone-950 transition-colors',
+          ]}
+        >
+          {page}
+        </a>
+      ))}
+    </div>
+
+    <a
+      href={pageUrl(currentPage + 1)}
+      class:list={[
+        'text-xs tracking-[0.15em] transition-colors',
+        currentPage >= lastPage ? 'pointer-events-none text-stone-300' : 'text-stone-600 hover:text-stone-950',
+      ]}
+      aria-disabled={currentPage >= lastPage}
+    >
+      Next
+    </a>
+  </nav>
+)}
