@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  store: CollectionEntry<'access'>;
+}
+
+const { store } = Astro.props;
+const telHref = `tel:${store.data.phone.replace(/-/g, '')}`;
+
+// Match both photos to the height of the more square one; the other is object-fit: cover-cropped to fit.
+const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / photo.height));
+---
+
+<section>
+  <h2 class="text-xl md:text-2xl font-medium tracking-wide text-stone-950">
+    {store.data.storeName}
+  </h2>
+
+  <div class="mt-6 grid grid-cols-2 gap-2">
+    {store.data.photos.map((photo) => (
+      <div
+        class="w-full border border-stone-100 shadow-sm overflow-hidden"
+        style={`aspect-ratio: ${sharedRatio}`}
+      >
+        <img src={photo.src} alt={store.data.storeName} class="w-full h-full object-cover block" />
+      </div>
+    ))}
+  </div>
+
+  <p class="mt-6 text-sm text-stone-700 tracking-[0.03em]">〒{store.data.postalCode}</p>
+  <p class="mt-1 text-sm text-stone-700 leading-relaxed tracking-[0.03em]">{store.data.address}</p>
+
+  <a
+    href={store.data.mapUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="mt-2 inline-block text-xs tracking-[0.15em] text-stone-400 hover:text-stone-950 transition-colors uppercase"
+  >
+    Map →
+  </a>
+
+  <div class="mt-6 flex flex-col gap-1 text-sm text-stone-600 tracking-[0.03em]">
+    <p>Opening Hours : {store.data.hours}</p>
+    <p>Closed : {store.data.closedDays}</p>
+    <p>
+      Tel : <a href={telHref} class="hover:text-stone-950 transition-colors tracking-[0.03em]">
+        {store.data.phone}
+      </a>
+    </p>
+  </div>
+
+  <a
+    href={store.data.reserveUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="mt-8 inline-flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-6 py-2.5 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
+  >
+    RESERVE
+  </a>
+</section>

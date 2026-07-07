@@ -19,7 +19,7 @@
 	<div class="justify-self-end flex items-center">
 	  <a
 		href="#"
-		class="flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-5 py-2 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
+		class="hidden md:flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-5 py-2 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
 	  >
 		RESERVE
 	  </a>
@@ -31,7 +31,9 @@
 
 </nav>
 
-<div id="menu-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-md z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+<div id="menu-backdrop" class="hidden md:block fixed inset-0 bg-stone-950/40 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+<div id="menu-overlay" class="fixed inset-0 md:right-auto md:w-[380px] md:max-w-[85vw] bg-white/95 md:bg-white backdrop-blur-md md:backdrop-blur-none md:shadow-2xl z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none md:-translate-x-full transition-all duration-300">
   <button id="menu-close" class="absolute top-6 left-6 p-2 text-stone-950 text-xl font-light">×</button>
 
   <div class="flex flex-col items-center gap-10 text-center">
@@ -41,12 +43,12 @@
       <a href="#" class="hover:text-stone-500 transition-colors">STAFF</a>
       <a href="/blog/" class="hover:text-stone-500 transition-colors">BLOG</a>
       <a href="#" class="hover:text-stone-500 transition-colors">ABOUT</a>
-      <a href="#" class="hover:text-stone-500 transition-colors">ACCESS</a>
+      <a href="/access" class="hover:text-stone-500 transition-colors">ACCESS</a>
     </div>
 
     <a
       href="#"
-      class="border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-8 py-3 rounded-full bg-transparent shadow-sm mt-4 hover:bg-stone-950 hover:text-white transition-colors duration-300"
+      class="md:hidden border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-8 py-3 rounded-full bg-transparent shadow-sm mt-4 hover:bg-stone-950 hover:text-white transition-colors duration-300"
     >
       RESERVE
     </a>
@@ -57,16 +59,23 @@
   const openBtn = document.getElementById('menu-open');
   const closeBtn = document.getElementById('menu-close');
   const overlay = document.getElementById('menu-overlay');
+  const backdrop = document.getElementById('menu-backdrop');
 
-  if (openBtn && closeBtn && overlay) {
-    openBtn.addEventListener('click', () => {
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-      overlay.classList.add('opacity-100');
-    });
-
-    closeBtn.addEventListener('click', () => {
-      overlay.classList.remove('opacity-100');
-      overlay.classList.add('opacity-0', 'pointer-events-none');
-    });
+  function openMenu() {
+    overlay?.classList.remove('opacity-0', 'pointer-events-none', 'md:-translate-x-full');
+    overlay?.classList.add('opacity-100', 'md:translate-x-0');
+    backdrop?.classList.remove('opacity-0', 'pointer-events-none');
+    backdrop?.classList.add('opacity-100');
   }
+
+  function closeMenu() {
+    overlay?.classList.remove('opacity-100', 'md:translate-x-0');
+    overlay?.classList.add('opacity-0', 'pointer-events-none', 'md:-translate-x-full');
+    backdrop?.classList.remove('opacity-100');
+    backdrop?.classList.add('opacity-0', 'pointer-events-none');
+  }
+
+  openBtn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  backdrop?.addEventListener('click', closeMenu);
 </script>
