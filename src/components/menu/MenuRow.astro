@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  item: CollectionEntry<'menu'>;
+}
+
+const { item } = Astro.props;
+const isOption = item.data.price.startsWith('+');
+---
+
+<div class={isOption ? 'pl-4' : ''}>
+  <div class="flex items-baseline justify-between gap-4">
+    <span class={isOption ? 'text-xs text-stone-500' : 'text-sm text-stone-950'}>
+      {item.data.menuName}
+    </span>
+    <span class={`shrink-0 ${isOption ? 'text-xs text-stone-500' : 'text-sm text-stone-950'}`}>
+      {item.data.price}
+    </span>
+  </div>
+
+  {item.data.note?.map((line) => <p class="mt-1 text-xs text-stone-400">* {line}</p>)}
+</div>

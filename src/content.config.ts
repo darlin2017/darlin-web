@@ -51,4 +51,15 @@ const staff = defineCollection({
   }),
 });
 
-export const collections = { blog, access, staff };
+const menu = defineCollection({
+  loader: file('src/content/menu/menu.json'),
+  schema: z.object({
+    category: z.enum(['Cut', 'Single Color', 'Double Process Color', 'Perm', 'Treatment', 'Other']),
+    menuName: z.string(),
+    price: z.string(),
+    note: z.array(z.string()).optional(),
+    sortOrder: z.number(),
+  }),
+});
+
+export const collections = { blog, access, staff, menu };

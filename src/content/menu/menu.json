@@ -1,0 +1,217 @@
+[
+  {
+    "id": "cut",
+    "category": "Cut",
+    "menuName": "Cut",
+    "price": "¥7,700",
+    "note": [
+      "及川・沖永 +¥1,100 / 門倉・眞鍋 +¥550",
+      "ご指名無し(フリー)でご予約のお客様には、ベース料金でご案内させて頂きます。"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "id": "kids-cut-preschool",
+    "category": "Cut",
+    "menuName": "Kids Cut (0〜6歳・小学生以下)",
+    "price": "¥3,300",
+    "sortOrder": 20
+  },
+  {
+    "id": "kids-cut-elementary",
+    "category": "Cut",
+    "menuName": "Kids Cut (小学生)",
+    "price": "¥4,400",
+    "sortOrder": 30
+  },
+  {
+    "id": "kids-cut-junior-high",
+    "category": "Cut",
+    "menuName": "Kids Cut (中学生)",
+    "price": "¥5,500",
+    "sortOrder": 40
+  },
+  {
+    "id": "kids-cut-high-school",
+    "category": "Cut",
+    "menuName": "Kids Cut (高校生)",
+    "price": "学割10% OFF",
+    "sortOrder": 50
+  },
+  {
+    "id": "bangs-cut",
+    "category": "Cut",
+    "menuName": "Bangs Cut",
+    "price": "¥1,650",
+    "sortOrder": 60
+  },
+  {
+    "id": "color",
+    "category": "Single Color",
+    "menuName": "Color",
+    "price": "¥12,100~",
+    "note": ["+shampoo blow dry"],
+    "sortOrder": 10
+  },
+  {
+    "id": "color-gray",
+    "category": "Single Color",
+    "menuName": "+gray color",
+    "price": "+¥550~",
+    "sortOrder": 20
+  },
+  {
+    "id": "color-bob",
+    "category": "Single Color",
+    "menuName": "+bob length",
+    "price": "+¥550",
+    "sortOrder": 30
+  },
+  {
+    "id": "color-medium",
+    "category": "Single Color",
+    "menuName": "+medium length",
+    "price": "+¥1,100",
+    "sortOrder": 40
+  },
+  {
+    "id": "color-long",
+    "category": "Single Color",
+    "menuName": "+long length",
+    "price": "+¥1,650",
+    "sortOrder": 50
+  },
+  {
+    "id": "color-super-long",
+    "category": "Single Color",
+    "menuName": "+super long length",
+    "price": "+¥2,200",
+    "sortOrder": 60
+  },
+  {
+    "id": "double-process-color",
+    "category": "Double Process Color",
+    "menuName": "Double process color",
+    "price": "¥19,800~(+レングス料金)",
+    "sortOrder": 10
+  },
+  {
+    "id": "highlights-lowlights",
+    "category": "Double Process Color",
+    "menuName": "High Lights & Low Lights full heads",
+    "price": "¥22,000~",
+    "sortOrder": 20
+  },
+  {
+    "id": "full-heads-oikawa",
+    "category": "Double Process Color",
+    "menuName": "full heads by Oikawa",
+    "price": "¥23,100~",
+    "sortOrder": 30
+  },
+  {
+    "id": "one-tip",
+    "category": "Double Process Color",
+    "menuName": "1tip",
+    "price": "+¥550",
+    "sortOrder": 40
+  },
+  {
+    "id": "point-color",
+    "category": "Double Process Color",
+    "menuName": "Point Color",
+    "price": "¥6,600~",
+    "sortOrder": 50
+  },
+  {
+    "id": "with-care-bleach",
+    "category": "Double Process Color",
+    "menuName": "With Care Bleach",
+    "price": "+¥3,300",
+    "sortOrder": 60
+  },
+  {
+    "id": "toner-on-color",
+    "category": "Double Process Color",
+    "menuName": "Toner On Color",
+    "price": "+¥3,300",
+    "sortOrder": 70
+  },
+  {
+    "id": "regular-perm",
+    "category": "Perm",
+    "menuName": "Regular Perm",
+    "price": "¥13,200~",
+    "sortOrder": 10
+  },
+  {
+    "id": "point-perm",
+    "category": "Perm",
+    "menuName": "Point Perm",
+    "price": "¥3,300~",
+    "sortOrder": 20
+  },
+  {
+    "id": "digital-perm",
+    "category": "Perm",
+    "menuName": "Digital Perm",
+    "price": "¥19,800~",
+    "sortOrder": 30
+  },
+  {
+    "id": "straight-perm",
+    "category": "Perm",
+    "menuName": "Straight Perm",
+    "price": "¥19,800",
+    "sortOrder": 40
+  },
+  {
+    "id": "roots-full",
+    "category": "Perm",
+    "menuName": "roots・full",
+    "price": "¥22,000~",
+    "sortOrder": 50
+  },
+  {
+    "id": "hard-perm",
+    "category": "Perm",
+    "menuName": "Hard Perm",
+    "price": "Ask",
+    "sortOrder": 60
+  },
+  {
+    "id": "coreme-treatment",
+    "category": "Treatment",
+    "menuName": "COREME Treatment",
+    "price": "¥4,950",
+    "sortOrder": 10
+  },
+  {
+    "id": "coreme-es-treatment",
+    "category": "Treatment",
+    "menuName": "COREME ES Treatment",
+    "price": "¥5,500",
+    "sortOrder": 20
+  },
+  {
+    "id": "hair-set",
+    "category": "Other",
+    "menuName": "Hair Set (Kadokura&Manabe)",
+    "price": "¥4,400",
+    "sortOrder": 10
+  },
+  {
+    "id": "early-morning",
+    "category": "Other",
+    "menuName": "Early Morning 30min",
+    "price": "+¥550",
+    "sortOrder": 20
+  },
+  {
+    "id": "shampoo-blow",
+    "category": "Other",
+    "menuName": "Shampoo & Blow",
+    "price": "¥2,200",
+    "sortOrder": 30
+  }
+]
