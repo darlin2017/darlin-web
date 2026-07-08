@@ -12,11 +12,11 @@ const { post } = Astro.props;
 <article>
   <a href={`/blog/${post.id}/`} class="group block">
     <div class="max-w-[500px] mx-auto">
-      <div class="border border-stone-100 shadow-sm overflow-hidden">
+      <div class="border border-stone-100 overflow-hidden">
         <img
           src={post.data.eyecatch}
           alt={post.data.title}
-          class="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-500"
+          class="w-full h-auto block"
         />
       </div>
 

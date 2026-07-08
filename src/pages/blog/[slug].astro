@@ -44,7 +44,7 @@ const { Content } = await render(post);
       <p class="mt-5 text-xs text-stone-400">{post.data.author}</p>
       <p class="mt-1 text-xs tracking-[0.00em] text-stone-400 uppercase">{formatDate(post.data.publishDate)}</p>
 
-      <div class="mt-10 border border-stone-100 shadow-sm overflow-hidden">
+      <div class="mt-10 border border-stone-100 overflow-hidden">
         <img src={post.data.eyecatch} alt={post.data.title} class="w-full h-auto block" />
       </div>
 

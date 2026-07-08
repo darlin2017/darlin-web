@@ -17,10 +17,10 @@ const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / p
     {store.data.storeName}
   </h2>
 
-  <div class="mt-6 grid grid-cols-2 gap-2">
+  <div class="mt-6 grid grid-cols-2 gap-0.5">
     {store.data.photos.map((photo) => (
       <div
-        class="w-full border border-stone-100 shadow-sm overflow-hidden"
+        class="w-full border border-stone-100 overflow-hidden"
         style={`aspect-ratio: ${sharedRatio}`}
       >
         <img src={photo.src} alt={store.data.storeName} class="w-full h-full object-cover block" />
