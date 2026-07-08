@@ -32,4 +32,23 @@ const access = defineCollection({
   }),
 });
 
-export const collections = { blog, access };
+const staff = defineCollection({
+  loader: file('src/content/staff/staff.json'),
+  schema: z.object({
+    name: z.string(),
+    salon: z.enum(['darlin', 'feel-like-makin-love', 'edie']),
+    position: z.string(),
+    instagram: z.string(),
+    photos: z
+      .array(
+        z.object({
+          src: z.string(),
+          width: z.number(),
+          height: z.number(),
+        })
+      )
+      .length(3),
+  }),
+});
+
+export const collections = { blog, access, staff };
