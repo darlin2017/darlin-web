@@ -1,8 +1,8 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { MenuItemData } from '../../lib/menu';
 
 interface Props {
-  item: CollectionEntry<'menu'>;
+  item: MenuItemData;
 }
 
 const { item } = Astro.props;

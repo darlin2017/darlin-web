@@ -1,9 +1,8 @@
 ---
 import type { GetStaticPaths, Page } from 'astro';
-import type { CollectionEntry } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import BlogListing from '../../../components/blog/BlogListing.astro';
-import { getSortedPosts, getArchiveGroups, PAGE_SIZE } from '../../../lib/blog';
+import { getSortedPosts, getArchiveGroups, PAGE_SIZE, type BlogPost } from '../../../lib/blog';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getSortedPosts();
@@ -13,7 +12,7 @@ export const getStaticPaths = (async ({ paginate }) => {
 }) satisfies GetStaticPaths;
 
 interface Props {
-  page: Page<CollectionEntry<'blog'>>;
+  page: Page<BlogPost>;
 }
 
 const { page } = Astro.props;

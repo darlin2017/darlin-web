@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EventItem from '../components/event/EventItem.astro';
+import { getEvents } from '../lib/event';
+
+const events = await getEvents();
+---
+
+<Layout title="Event | darlin. / FEEL LIKE MAKIN' LOVE / EDIE">
+  <main class="pt-28 md:pt-28 pb-12 px-6 md:px-12 max-w-2xl mx-auto">
+    <h1 class="text-2xl md:text-3xl font-medium tracking-wide text-stone-950 mb-12 text-center">Event</h1>
+
+    {events.length > 0 ? (
+      <div class="flex flex-col">
+        {events.map((event) => <EventItem event={event} />)}
+      </div>
+    ) : (
+      <p class="text-sm text-stone-400 text-center">イベント情報がありません。</p>
+    )}
+  </main>
+</Layout>

@@ -2,9 +2,10 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import StaffMember from '../components/staff/StaffMember.astro';
+import { getStaffList, memberBelongsToSalon } from '../lib/staff';
 
 const stores = await getCollection('access');
-const allStaff = await getCollection('staff');
+const allStaff = await getStaffList();
 ---
 
 <Layout title="Staff | darlin. / FEEL LIKE MAKIN' LOVE / EDIE">
@@ -14,7 +15,7 @@ const allStaff = await getCollection('staff');
     {allStaff.length > 0 ? (
       <div class="flex flex-col gap-24">
         {stores.map((store) => {
-          const members = allStaff.filter((member) => member.data.salon === store.id);
+          const members = allStaff.filter((member) => memberBelongsToSalon(member, store.id));
           if (members.length === 0) return null;
 
           return (

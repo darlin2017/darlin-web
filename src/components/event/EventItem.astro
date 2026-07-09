@@ -1,0 +1,97 @@
+---
+import type { EventItemData } from '../../lib/event';
+import { formatEventDate } from '../../lib/event';
+
+interface Props {
+  event: EventItemData;
+}
+
+const { event } = Astro.props;
+const flyer = event.data.flyer;
+---
+
+<div class="max-w-[500px] mx-auto py-3 first:pt-0">
+  <button
+    type="button"
+    aria-expanded="false"
+    class="event-toggle group/item w-full flex items-baseline justify-between gap-4 text-left cursor-pointer"
+  >
+    <span class="flex items-baseline gap-2 text-base md:text-base font-medium tracking-wide text-stone-950 group-hover/item:opacity-60 transition-opacity">
+      <span class="inline-block transition-transform duration-200 group-aria-expanded/item:rotate-90">›</span>
+      {event.data.title}
+    </span>
+    <span class="shrink-0 text-xs text-stone-400">
+      {formatEventDate(event.data.eventDate)}
+    </span>
+  </button>
+
+  <div class="event-panel overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out" style="max-height: 0px;">
+    {flyer.length > 0 && (
+      <div class="mt-5 flex flex-col gap-3">
+        {flyer.map((photo) => (
+          <div class="border border-stone-100 overflow-hidden">
+            <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
+          </div>
+        ))}
+      </div>
+    )}
+
+    {event.data.description && (
+      <div
+        class="event-description mt-5 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
+        set:html={event.data.description}
+      />
+    )}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.event-toggle').forEach((button) => {
+    const panel = button.nextElementSibling as HTMLElement | null;
+    if (!panel) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+      if (isOpen) {
+        panel.style.maxHeight = '0px';
+        panel.classList.remove('opacity-100');
+        panel.classList.add('opacity-0');
+        button.setAttribute('aria-expanded', 'false');
+      } else {
+        panel.style.maxHeight = `${panel.scrollHeight}px`;
+        panel.classList.remove('opacity-0');
+        panel.classList.add('opacity-100');
+        button.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+
+<style>
+  .event-description :global(p) {
+    margin-bottom: 1.5em;
+  }
+  .event-description :global(h2) {
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+    color: #1c1917;
+  }
+  .event-description :global(ul) {
+    list-style: disc;
+    padding-left: 1.25em;
+    margin-bottom: 1.5em;
+  }
+  .event-description :global(li) {
+    margin-bottom: 0.5em;
+  }
+  .event-description :global(figcaption) {
+    margin-top: 0.1em;
+    font-size: 0.7rem;
+    color: #1c1917;
+    text-align: left;
+  }
+</style>

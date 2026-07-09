@@ -1,12 +1,11 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import type { ArchiveGroup } from '../../lib/blog';
+import type { ArchiveGroup, BlogPost } from '../../lib/blog';
 import BlogCard from './BlogCard.astro';
 import ArchiveList from './ArchiveList.astro';
 import Pagination from './Pagination.astro';
 
 interface Props {
-  posts: CollectionEntry<'blog'>[];
+  posts: BlogPost[];
   archiveGroups: ArchiveGroup[];
   pagination?: { currentPage: number; lastPage: number };
 }

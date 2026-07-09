@@ -1,10 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostNav from '../../components/blog/PostNav.astro';
-import { formatDate, getSortedPosts } from '../../lib/blog';
+import { formatDate, getSortedPosts, type BlogPost } from '../../lib/blog';
 
 export const getStaticPaths = (async () => {
   const posts = await getSortedPosts();
@@ -19,13 +17,12 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 interface Props {
-  post: CollectionEntry<'blog'>;
-  prev?: CollectionEntry<'blog'>;
-  next?: CollectionEntry<'blog'>;
+  post: BlogPost;
+  prev?: BlogPost;
+  next?: BlogPost;
 }
 
 const { post, prev, next } = Astro.props;
-const { Content } = await render(post);
 ---
 
 <Layout title={`${post.data.title} | Blog | darlin. / FEEL LIKE MAKIN' LOVE / EDIE`}>
@@ -44,13 +41,10 @@ const { Content } = await render(post);
       <p class="mt-5 text-xs text-stone-400">{post.data.author}</p>
       <p class="mt-1 text-xs tracking-[0.00em] text-stone-400 uppercase">{formatDate(post.data.publishDate)}</p>
 
-      <div class="mt-10 border border-stone-100 overflow-hidden">
-        <img src={post.data.eyecatch} alt={post.data.title} class="w-full h-auto block" />
-      </div>
-
-      <div class="blog-content mt-10 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]">
-        <Content />
-      </div>
+      <div
+        class="blog-content mt-10 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
+        set:html={post.data.content}
+      />
 
       <PostNav prev={prev} next={next} />
     </div>
@@ -76,5 +70,11 @@ const { Content } = await render(post);
   }
   .blog-content :global(li) {
     margin-bottom: 0.5em;
+  }
+  .blog-content :global(figcaption) {
+    margin-top: 0.1sem;
+    font-size: 0.7rem;
+    color: #1c1917;
+    text-align: left;
   }
 </style>

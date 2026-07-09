@@ -1,9 +1,8 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { formatDate } from '../../lib/blog';
+import { formatDate, type BlogPost } from '../../lib/blog';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: BlogPost;
 }
 
 const { post } = Astro.props;
@@ -12,13 +11,15 @@ const { post } = Astro.props;
 <article>
   <a href={`/blog/${post.id}/`} class="group block">
     <div class="max-w-[500px] mx-auto">
-      <div class="border border-stone-100 overflow-hidden">
-        <img
-          src={post.data.eyecatch}
-          alt={post.data.title}
-          class="w-full h-auto block"
-        />
-      </div>
+      {post.data.eyecatch && (
+        <div class="border border-stone-100 overflow-hidden">
+          <img
+            src={post.data.eyecatch.url}
+            alt={post.data.title}
+            class="w-full h-auto block"
+          />
+        </div>
+      )}
 
       <h2 class="mt-2 text-base md:text-base font-medium tracking-wide text-stone-950 group-hover:opacity-60 transition-opacity">
         {post.data.title}

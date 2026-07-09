@@ -1,6 +1,26 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { client, type MicroCMSImage } from './microcms';
 
 export const PAGE_SIZE = 10;
+
+export type BlogPost = {
+  id: string;
+  data: {
+    title: string;
+    publishDate: Date;
+    eyecatch: MicroCMSImage | null;
+    content: string;
+    author: string;
+  };
+};
+
+type BlogPostResponse = {
+  id: string;
+  title: string;
+  publishDate: string;
+  eyecatch: MicroCMSImage | null;
+  content: string;
+  author: string;
+};
 
 export function formatDate(date: Date): string {
   const year = date.getFullYear();
@@ -9,8 +29,23 @@ export function formatDate(date: Date): string {
   return `${year}.${month}.${day}`;
 }
 
-export async function getSortedPosts(): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getCollection('blog');
+export async function getSortedPosts(): Promise<BlogPost[]> {
+  const { contents } = await client.getList<BlogPostResponse>({
+    endpoint: 'blog',
+    queries: { limit: 100, orders: '-publishDate' },
+  });
+
+  const posts = contents.map((post) => ({
+    id: post.id,
+    data: {
+      title: post.title,
+      publishDate: new Date(post.publishDate),
+      eyecatch: post.eyecatch ?? null,
+      content: post.content,
+      author: post.author,
+    },
+  }));
+
   return posts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 }
 
@@ -25,7 +60,7 @@ export type ArchiveGroup = {
   posts: ArchivePost[];
 };
 
-export function getArchiveGroups(posts: CollectionEntry<'blog'>[]): ArchiveGroup[] {
+export function getArchiveGroups(posts: BlogPost[]): ArchiveGroup[] {
   const yearToPosts = new Map<number, ArchivePost[]>();
 
   for (const post of posts) {

@@ -1,10 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import MenuRow from '../components/menu/MenuRow.astro';
-import { groupMenuByCategory } from '../lib/menu';
+import { getMenuItems, groupMenuByCategory } from '../lib/menu';
 
-const menuItems = await getCollection('menu');
+const menuItems = await getMenuItems();
 const groups = groupMenuByCategory(menuItems);
 ---
 

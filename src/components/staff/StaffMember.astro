@@ -1,8 +1,8 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { StaffMemberData } from '../../lib/staff';
 
 interface Props {
-  member: CollectionEntry<'staff'>;
+  member: StaffMemberData;
 }
 
 const { member } = Astro.props;
@@ -50,7 +50,7 @@ const sharedRatio = Math.max(...member.data.photos.map((photo) => photo.width / 
           class="w-full border border-stone-100 overflow-hidden"
           style={`aspect-ratio: ${sharedRatio}`}
         >
-          <img src={photo.src} alt={member.data.name} class="w-full h-full object-cover block" />
+          <img src={photo.url} alt={member.data.name} class="w-full h-full object-cover block" />
         </div>
       ))}
     </div>
