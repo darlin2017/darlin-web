@@ -16,7 +16,7 @@ const { images } = Astro.props;
     <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 pt-16">
       {images.map((image) => (
         <div class="w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
-          <img src={image.src} alt={image.alt} class="w-full h-full object-cover block" loading="lazy" />
+          <img src={image.src} alt={image.alt} class="w-full h-full object-cover block" loading="lazy" decoding="async" />
         </div>
       ))}
     </div>
@@ -33,6 +33,10 @@ const { images } = Astro.props;
 
   gsap.registerPlugin(ScrollTrigger);
 
+  // Smooths out mobile Safari/Chrome scroll jank around pinned sections
+  // (address bar resize, momentum scroll conflicts with the pin).
+  ScrollTrigger.normalizeScroll(true);
+
   document.querySelectorAll<HTMLElement>('.scroll-gallery').forEach((section) => {
     const track = section.querySelector<HTMLElement>('.scroll-gallery-track');
     if (!track) return;
@@ -40,6 +44,7 @@ const { images } = Astro.props;
     // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
     const SPEED = 0.8;
     const getScrollLength = () => track.scrollWidth - window.innerWidth;
+    if (getScrollLength() <= 0) return;
 
     gsap.to(track, {
       x: () => -getScrollLength(),

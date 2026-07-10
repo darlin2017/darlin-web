@@ -1,29 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ScrollGallery from '../components/home/ScrollGallery.astro';
+import { getHomeGalleries } from '../lib/home';
 
-// TEMP: dummy gallery images until real content exists in microCMS's `home` API.
-// Once populated, swap this for `await getHomeGalleries()` from `../lib/home`.
-const galleryImages = [
-  { src: '/pic01.png', alt: 'darlin. gallery 1' },
-  { src: '/pic02.png', alt: 'darlin. gallery 2' },
-  { src: '/pic03.png', alt: 'darlin. gallery 3' },
-  { src: '/darlin01.png', alt: 'darlin. gallery 4' },
-  { src: '/eddie01.png', alt: 'darlin. gallery 5' },
-  { src: '/eddie02.png', alt: 'darlin. gallery 6' },
-  { src: '/feel_like01.png', alt: 'darlin. gallery 7' },
-  { src: '/feel_like02.png', alt: 'darlin. gallery 8' },
-];
+const homeGalleries = await getHomeGalleries();
+const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index) => ({
+  src: image.url,
+  alt: `darlin. gallery ${index + 1}`,
+}));
 ---
 
 <Layout title="darlin. / FEEL LIKE MAKIN' LOVE / EDIE" showFooter={false}>
   <main class="bg-white text-stone-950 font-base">
-    <ScrollGallery images={galleryImages}>
-      <div slot="footer" class="pb-6 text-center px-4">
+    {galleryImages.length > 0 ? (
+      <ScrollGallery images={galleryImages}>
+        <div slot="footer" class="pb-6 text-center px-4">
+          <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
+            Copyrights © darlin. All Rights Reserved.
+          </p>
+        </div>
+      </ScrollGallery>
+    ) : (
+      <div class="h-screen flex flex-col items-center justify-center gap-6">
+        <p class="text-sm text-stone-400">ギャラリー画像がありません。</p>
         <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
           Copyrights © darlin. All Rights Reserved.
         </p>
       </div>
-    </ScrollGallery>
+    )}
   </main>
 </Layout>
