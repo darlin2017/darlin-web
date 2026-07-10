@@ -34,7 +34,7 @@ const { images } = Astro.props;
     if (!track) return;
 
     // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
-    const SPEED = 0.5;
+    const SPEED = 0.7;
     const getScrollLength = () => track.scrollWidth - window.innerWidth;
 
     gsap.to(track, {
