@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+
+const stores = [
+  {
+    name: 'darlin.',
+    logo: '/logo-darlin.png',
+    reserveUrl: 'https://airrsv.net/darlinhair/calendar',
+    heightClass: 'h-14 md:h-16',
+  },
+  {
+    name: 'EDIE',
+    logo: '/logo-edie.png',
+    reserveUrl: 'https://airrsv.net/edietokyo/calendar',
+    heightClass: 'h-16 md:h-20',
+  },
+  {
+    name: "Feel Like Makin' Love",
+    logo: '/logo-feellikemakinlove.png',
+    reserveUrl: 'https://airrsv.net/feellikemakinlove/calendar',
+    heightClass: 'h-18 md:h-22',
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="darlin. / FEEL LIKE MAKIN' LOVE / EDIE — Reserve" />
+  <title>Reserve | darlin. / FEEL LIKE MAKIN' LOVE / EDIE</title>
+
+  <link rel="preload" href="/fonts/switzer/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap"
+  />
+</head>
+
+<body class="bg-white text-stone-950 font-base min-h-screen">
+  <main class="min-h-screen flex flex-col items-center justify-center gap-18 md:gap-22 px-6">
+    {stores.map((store) => (
+      <a href={store.reserveUrl} class="hover:opacity-60 transition-opacity">
+        <img src={store.logo} alt={store.name} class={`${store.heightClass} w-auto object-contain`} />
+      </a>
+    ))}
+  </main>
+</body>
+</html>
