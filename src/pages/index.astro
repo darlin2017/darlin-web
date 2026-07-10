@@ -4,8 +4,10 @@ import ScrollGallery from '../components/home/ScrollGallery.astro';
 import { getHomeGalleries } from '../lib/home';
 
 const homeGalleries = await getHomeGalleries();
+// Resize/re-encode via microCMS's image API instead of shipping full camera-resolution originals
+// (displayed at max 460px wide, so 960px covers retina without sending multi-MB source files).
 const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index) => ({
-  src: image.url,
+  src: `${image.url}?w=960&fm=webp`,
   alt: `darlin. gallery ${index + 1}`,
 }));
 ---
@@ -21,7 +23,7 @@ const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index)
         </div>
       </ScrollGallery>
     ) : (
-      <div class="h-screen flex flex-col items-center justify-center gap-6">
+      <div class="h-dvh flex flex-col items-center justify-center gap-6">
         <p class="text-sm text-stone-400">ギャラリー画像がありません。</p>
         <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
           Copyrights © darlin. All Rights Reserved.
