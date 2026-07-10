@@ -1,0 +1,59 @@
+---
+interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+}
+
+const { images } = Astro.props;
+---
+
+<section class="scroll-gallery relative bg-white">
+  <div class="scroll-gallery-pin h-screen flex items-center overflow-hidden">
+    <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 py-20">
+      {images.map((image) => (
+        <div class="w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
+          <img src={image.src} alt={image.alt} class="w-full h-full object-cover block" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll<HTMLElement>('.scroll-gallery').forEach((section) => {
+    const track = section.querySelector<HTMLElement>('.scroll-gallery-track');
+    if (!track) return;
+
+    // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
+    const SPEED = 0.5;
+    const getScrollLength = () => track.scrollWidth - window.innerWidth;
+
+    gsap.to(track, {
+      x: () => -getScrollLength(),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${getScrollLength() / SPEED}`,
+        scrub: 1,
+        pin: true,
+        invalidateOnRefresh: true,
+      },
+    });
+  });
+</script>
+
+<style>
+  .scroll-gallery-track {
+    will-change: transform;
+  }
+</style>
