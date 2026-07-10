@@ -11,15 +11,19 @@ interface Props {
 const { images } = Astro.props;
 ---
 
-<section class="scroll-gallery relative bg-white">
-  <div class="scroll-gallery-pin h-screen flex items-center overflow-hidden">
-    <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 py-20">
+<section class="scroll-gallery relative bg-white h-screen flex flex-col overflow-hidden">
+  <div class="scroll-gallery-pin flex-1 flex items-center overflow-hidden">
+    <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 pt-16">
       {images.map((image) => (
         <div class="w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
           <img src={image.src} alt={image.alt} class="w-full h-full object-cover block" loading="lazy" />
         </div>
       ))}
     </div>
+  </div>
+
+  <div class="shrink-0">
+    <slot name="footer" />
   </div>
 </section>
 
@@ -34,7 +38,7 @@ const { images } = Astro.props;
     if (!track) return;
 
     // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
-    const SPEED = 0.7;
+    const SPEED = 0.8;
     const getScrollLength = () => track.scrollWidth - window.innerWidth;
 
     gsap.to(track, {

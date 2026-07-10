@@ -18,12 +18,12 @@ const galleryImages = [
 
 <Layout title="darlin. / FEEL LIKE MAKIN' LOVE / EDIE" showFooter={false}>
   <main class="bg-white text-stone-950 font-base">
-    <ScrollGallery images={galleryImages} />
-
-    <div class="pb-10 text-center px-4">
-      <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
-        Copyrights © darlin. All Rights Reserved.
-      </p>
-    </div>
+    <ScrollGallery images={galleryImages}>
+      <div slot="footer" class="pb-6 text-center px-4">
+        <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
+          Copyrights © darlin. All Rights Reserved.
+        </p>
+      </div>
+    </ScrollGallery>
   </main>
 </Layout>
