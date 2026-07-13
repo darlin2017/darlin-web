@@ -8,10 +8,10 @@
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro-ku Yutenji 2-6-13 アニーハウス 2F",
-    "mapUrl": "https://maps.google.com/?q=東京都渋谷区神宮前5-1-1",
-    "hours": "10:00 - 20:00",
-    "closedDays": "毎週火曜日",
-    "phone": "03-1234-5678",
+    "mapUrl": "https://maps.app.goo.gl/mD5o7giSviLAXVY39",
+    "hours": "11:00 - 20:00",
+    "closedDays": "不定休",
+    "phone": "03-6303-1363",
     "reserveUrl": "https://airrsv.net/darlinhair/calendar"
   },
   {
@@ -23,9 +23,9 @@
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro-ku Yutenji 2-6-13 アニーハウス 1F",
-    "mapUrl": "https://maps.google.com/?q=東京都渋谷区猿楽町3-2-2",
-    "hours": "11:00 - 21:00",
-    "closedDays": "毎週水曜日",
+    "mapUrl": "https://maps.app.goo.gl/AgGEF7ZdY1vToDqd7",
+    "hours": "11:00 - 20:00",
+    "closedDays": "不定休",
     "phone": "03-2345-6789",
     "reserveUrl": "https://airrsv.net/feellikemakinlove/calendar"
   },
@@ -38,10 +38,10 @@
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro City Yutenji 2-5-4 ブリッヂハイツ 1F",
-    "mapUrl": "https://maps.google.com/?q=東京都目黒区青葉台1-3-3",
-    "hours": "10:00 - 19:00",
-    "closedDays": "毎週月曜日",
-    "phone": "03-3456-7890",
+    "mapUrl": "https://maps.app.goo.gl/6zUNFEPcqFg6E2Q66",
+    "hours": "Weekdays  11:00 - 19:00\nSat/Sun  10:00 - 19:00",
+    "closedDays": "不定休",
+    "phone": "03-6303-0598",
     "reserveUrl": "https://airrsv.net/edietokyo/calendar"
   }
 ]

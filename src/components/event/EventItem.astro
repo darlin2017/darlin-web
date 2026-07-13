@@ -10,13 +10,13 @@ const { event } = Astro.props;
 const flyer = event.data.flyer;
 ---
 
-<div class="max-w-[500px] mx-auto py-3 first:pt-0">
+<div class="py-3 first:pt-0">
   <button
     type="button"
     aria-expanded="false"
     class="event-toggle group/item w-full flex items-baseline justify-between gap-4 text-left cursor-pointer"
   >
-    <span class="flex items-baseline gap-2 text-base md:text-base font-medium tracking-wide text-stone-950 group-hover/item:opacity-60 transition-opacity">
+    <span class="flex items-baseline gap-2 text-base md:text-base font-medium tracking-wider text-stone-950 group-hover/item:opacity-60 transition-opacity">
       <span class="inline-block transition-transform duration-200 group-aria-expanded/item:rotate-90">›</span>
       {event.data.title}
     </span>
@@ -26,22 +26,24 @@ const flyer = event.data.flyer;
   </button>
 
   <div class="event-panel overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out" style="max-height: 0px;">
-    {flyer.length > 0 && (
-      <div class="mt-5 flex flex-col gap-3">
-        {flyer.map((photo) => (
-          <div class="border border-stone-100 overflow-hidden">
-            <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
-          </div>
-        ))}
-      </div>
-    )}
+    <div class="max-w-[500px] mx-auto">
+      {flyer.length > 0 && (
+        <div class="mt-5 flex flex-col gap-3">
+          {flyer.map((photo) => (
+            <div class="border border-stone-100 overflow-hidden">
+              <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
+            </div>
+          ))}
+        </div>
+      )}
 
-    {event.data.description && (
-      <div
-        class="event-description mt-5 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
-        set:html={event.data.description}
-      />
-    )}
+      {event.data.description && (
+        <div
+          class="event-description mt-5 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
+          set:html={event.data.description}
+        />
+      )}
+    </div>
   </div>
 </div>
 

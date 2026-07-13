@@ -7,6 +7,7 @@ interface Props {
 
 const { store } = Astro.props;
 const telHref = `tel:${store.data.phone.replace(/-/g, '')}`;
+const hoursLines = store.data.hours.split('\n');
 
 // Match both photos to the height of the more square one; the other is object-fit: cover-cropped to fit.
 const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / photo.height));
@@ -41,7 +42,14 @@ const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / p
   </a>
 
   <div class="mt-6 flex flex-col gap-1 text-sm text-stone-600 tracking-[0.03em]">
-    <p>Opening Hours : {store.data.hours}</p>
+    {hoursLines.length > 1 ? (
+      <>
+        <p>Opening Hours :</p>
+        {hoursLines.map((line) => <p class="pl-4">{line}</p>)}
+      </>
+    ) : (
+      <p>Opening Hours : {hoursLines[0]}</p>
+    )}
     <p>Closed : {store.data.closedDays}</p>
     <p>
       Tel : <a href={telHref} class="hover:text-stone-950 transition-colors tracking-[0.03em]">
