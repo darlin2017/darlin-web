@@ -1,12 +1,12 @@
 ---
 ---
 
-<nav class="fixed top-0 left-0 w-full backdrop-blur-sm bg-white/70 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-4 border-b border-stone-100 z-50">
+<nav id="site-nav" class="fixed top-0 left-0 w-full backdrop-blur-sm bg-white/70 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-4 border-b border-stone-100 z-50">
 
 	<div class="justify-self-start flex items-center">
-	  <button id="menu-open" class="flex flex-col gap-1.5 p-2" aria-label="Menu">
-		<span class="w-5 h-[1px] bg-stone-950"></span>
-		<span class="w-5 h-[1px] bg-stone-950"></span>
+	  <button id="menu-open" aria-expanded="false" class="flex flex-col gap-1.5 p-1" aria-label="Menu">
+		<span class="w-4 h-[1px] bg-stone-950"></span>
+		<span class="w-4 h-[1px] bg-stone-950"></span>
 	  </button>
 	</div>
 
@@ -37,54 +37,71 @@
 
 </nav>
 
-<div id="menu-backdrop" class="hidden md:block fixed inset-0 bg-stone-950/40 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+<div id="menu-dropdown" class="fixed left-1 w-full backdrop-blur-sm bg-white/70 border-b border-stone-100 overflow-hidden z-40 transition-[max-height] duration-300 ease-in-out" style="max-height: 0px;">
+  <div id="menu-dropdown-inner" class="flex flex-col items-start md:gap-0 px-4 md:px-8 py-4 md:py-4">
+    <div class="flex flex-col gap-2 md:gap-1 text-[12px] tracking-[0.15em] font-base text-stone-600 px-3">
+      <a href="/" class="hover:text-stone-950 transition-colors">home</a>
+      <a href="/menu" class="hover:text-stone-500 transition-colors">menu</a>
+      <a href="/staff" class="hover:text-stone-500 transition-colors">staff</a>
+      <a href="/blog/" class="hover:text-stone-500 transition-colors">blog</a>
+      <a href="/event" class="hover:text-stone-500 transition-colors">event</a>
+      <a href="/access" class="hover:text-stone-500 transition-colors">access</a>
+      <a href="#" class="hover:text-stone-500 transition-colors">about</a>
 
-<div id="menu-overlay" class="fixed inset-0 md:right-auto md:w-[380px] md:max-w-[85vw] bg-white/95 md:bg-white backdrop-blur-md md:backdrop-blur-none md:shadow-2xl z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none md:-translate-x-full transition-all duration-300">
-  <button id="menu-close" class="absolute top-6 left-6 p-2 text-stone-950 text-xl font-light">×</button>
-
-  <div class="flex flex-col items-center gap-10 text-center">
-    <div class="flex flex-col gap-8 text-sm tracking-[0.25em] font-light text-stone-600">
-      <a href="/" class="hover:text-stone-950 transition-colors">HOME</a>
-      <a href="/menu" class="hover:text-stone-500 transition-colors">MENU</a>
-      <a href="/staff" class="hover:text-stone-500 transition-colors">STAFF</a>
-      <a href="/blog/" class="hover:text-stone-500 transition-colors">BLOG</a>
-      <a href="/event" class="hover:text-stone-500 transition-colors">EVENT</a>
-      <a href="/access" class="hover:text-stone-500 transition-colors">ACCESS</a>
-      <a href="#" class="hover:text-stone-500 transition-colors">ABOUT</a>
+      <a
+        href="/reserve"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="md:hidden self-start -ml-4 border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-5 py-2 rounded-full bg-transparent shadow-sm mt-1 hover:bg-stone-950 hover:text-white transition-colors duration-300"
+      >
+        RESERVE
+      </a>
     </div>
-
-    <a
-      href="/reserve"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="md:hidden border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-8 py-3 rounded-full bg-transparent shadow-sm mt-4 hover:bg-stone-950 hover:text-white transition-colors duration-300"
-    >
-      RESERVE
-    </a>
   </div>
 </div>
 
+<div id="menu-spacer" class="transition-[height] duration-300 ease-in-out" style="height: 0px;"></div>
+
 <script>
-  const openBtn = document.getElementById('menu-open');
-  const closeBtn = document.getElementById('menu-close');
-  const overlay = document.getElementById('menu-overlay');
-  const backdrop = document.getElementById('menu-backdrop');
+  const nav = document.getElementById('site-nav') as HTMLElement | null;
+  const openBtn = document.getElementById('menu-open') as HTMLButtonElement | null;
+  const dropdown = document.getElementById('menu-dropdown') as HTMLElement | null;
+  const dropdownInner = document.getElementById('menu-dropdown-inner') as HTMLElement | null;
+  const spacer = document.getElementById('menu-spacer') as HTMLElement | null;
+
+  function syncNavOffset() {
+    if (!nav || !dropdown) return;
+    dropdown.style.top = `${nav.offsetHeight}px`;
+  }
+
+  function isOpen() {
+    return openBtn?.getAttribute('aria-expanded') === 'true';
+  }
 
   function openMenu() {
-    overlay?.classList.remove('opacity-0', 'pointer-events-none', 'md:-translate-x-full');
-    overlay?.classList.add('opacity-100', 'md:translate-x-0');
-    backdrop?.classList.remove('opacity-0', 'pointer-events-none');
-    backdrop?.classList.add('opacity-100');
+    if (!dropdown || !dropdownInner || !spacer || !openBtn) return;
+    syncNavOffset();
+    const contentHeight = dropdownInner.scrollHeight;
+    dropdown.style.maxHeight = `${contentHeight}px`;
+    spacer.style.height = `${contentHeight}px`;
+    openBtn.setAttribute('aria-expanded', 'true');
   }
 
   function closeMenu() {
-    overlay?.classList.remove('opacity-100', 'md:translate-x-0');
-    overlay?.classList.add('opacity-0', 'pointer-events-none', 'md:-translate-x-full');
-    backdrop?.classList.remove('opacity-100');
-    backdrop?.classList.add('opacity-0', 'pointer-events-none');
+    if (!dropdown || !spacer || !openBtn) return;
+    dropdown.style.maxHeight = '0px';
+    spacer.style.height = '0px';
+    openBtn.setAttribute('aria-expanded', 'false');
   }
 
-  openBtn?.addEventListener('click', openMenu);
-  closeBtn?.addEventListener('click', closeMenu);
-  backdrop?.addEventListener('click', closeMenu);
+  openBtn?.addEventListener('click', () => {
+    isOpen() ? closeMenu() : openMenu();
+  });
+
+  window.addEventListener('resize', () => {
+    syncNavOffset();
+    if (isOpen()) openMenu();
+  });
+
+  syncNavOffset();
 </script>
