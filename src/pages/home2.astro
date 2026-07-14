@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ScrollGalleryV2 from '../components/home/ScrollGalleryV2.astro';
+import { getHomeGalleries } from '../lib/home';
+
+const homeGalleries = await getHomeGalleries();
+// Resize/re-encode via microCMS's image API instead of shipping full camera-resolution originals
+// (displayed at max 460px wide, so 960px covers retina without sending multi-MB source files).
+const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index) => ({
+  src: `${image.url}?w=960&fm=webp`,
+  alt: `darlin. gallery ${index + 1}`,
+}));
+---
+
+<Layout title="darlin. / FEEL LIKE MAKIN' LOVE / EDIE" showFooter={false}>
+  <main class="bg-white text-stone-950 font-base">
+    {galleryImages.length > 0 ? (
+      <ScrollGalleryV2 images={galleryImages}>
+        <div slot="footer" class="pb-6 text-center px-4">
+          <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
+            Copyrights © darlin. All Rights Reserved.
+          </p>
+        </div>
+      </ScrollGalleryV2>
+    ) : (
+      <div class="h-dvh flex flex-col items-center justify-center gap-6">
+        <p class="text-sm text-stone-400">ギャラリー画像がありません。</p>
+        <p class="text-[5px] md:text-[7px] tracking-[0.4em] text-stone-400 uppercase leading-none">
+          Copyrights © darlin. All Rights Reserved.
+        </p>
+      </div>
+    )}
+  </main>
+</Layout>
