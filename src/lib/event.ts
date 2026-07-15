@@ -1,4 +1,5 @@
 import { client, type MicroCMSImage } from './microcms';
+import { getJSTParts } from './date';
 
 export type EventItemData = {
   id: string;
@@ -18,13 +19,8 @@ type EventResponse = {
   description: string;
 };
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 export function formatEventDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const weekday = WEEKDAYS[date.getDay()];
+  const { year, month, day, weekday } = getJSTParts(date);
   return `${year} ${month}/${day} (${weekday})`;
 }
 

@@ -1,4 +1,5 @@
 import { client, type MicroCMSImage } from './microcms';
+import { getJSTParts } from './date';
 
 export const PAGE_SIZE = 10;
 
@@ -23,9 +24,7 @@ type BlogPostResponse = {
 };
 
 export function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const { year, month, day } = getJSTParts(date);
   return `${year}.${month}.${day}`;
 }
 
@@ -64,7 +63,7 @@ export function getArchiveGroups(posts: BlogPost[]): ArchiveGroup[] {
   const yearToPosts = new Map<number, ArchivePost[]>();
 
   for (const post of posts) {
-    const year = post.data.publishDate.getFullYear();
+    const year = getJSTParts(post.data.publishDate).year;
     if (!yearToPosts.has(year)) yearToPosts.set(year, []);
     yearToPosts.get(year)!.push({ id: post.id, title: post.data.title, author: post.data.author });
   }
