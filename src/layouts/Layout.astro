@@ -7,13 +7,19 @@ interface Props {
   title: string;
   description?: string;
   showFooter?: boolean;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
 }
 
 const {
   title,
-  description = "darlin. / FEEL LIKE MAKIN' LOVE / EDIE",
+  description = '目黒区・祐天寺の美容室 darlin. / EDIE / Feel Like Makin\' Loveの公式サイトです。ヘアスタイルを通して日本人の美しさ、強さを表現しながら、音楽、アートなど東京のカルチャーを発信しているサロンです。',
   showFooter = true,
+  ogType = 'website',
+  noindex = false,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -23,6 +29,16 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <title>{title}</title>
+
+  <link rel="canonical" href={canonicalURL} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:site_name" content="darlin. / EDIE / Feel Like Makin' Love" />
+  <meta property="og:locale" content="ja_JP" />
 
   <link rel="preload" href="/fonts/switzer/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
 

@@ -20,7 +20,10 @@ const allPosts = await getSortedPosts();
 const archiveGroups = getArchiveGroups(allPosts);
 ---
 
-<Layout title={`Blog Page ${page.currentPage} | darlin. / FEEL LIKE MAKIN' LOVE / EDIE`}>
+<Layout
+  title={`Blog Page ${page.currentPage} | darlin. / EDIE / Feel Like Makin' Love`}
+  description="darlin. / EDIE / Feel Like Makin\' Loveのブログ。ヘアスタイルの提案から、日々のスナップまで発信しています。"
+>
   <BlogListing
     posts={page.data}
     archiveGroups={archiveGroups}

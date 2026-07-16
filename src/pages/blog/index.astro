@@ -9,7 +9,10 @@ const archiveGroups = getArchiveGroups(allPosts);
 const lastPage = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
 ---
 
-<Layout title="Blog | darlin. / FEEL LIKE MAKIN' LOVE / EDIE">
+<Layout
+  title="Blog | darlin. / EDIE / Feel Like Makin' Love"
+  description="darlin. / EDIE / Feel Like Makin\' Loveのブログ。ヘアスタイルの提案から、日々のスナップまで発信しています。"
+>
   <BlogListing
     posts={posts}
     archiveGroups={archiveGroups}

@@ -12,7 +12,11 @@ const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index)
 }));
 ---
 
-<Layout title="darlin. / FEEL LIKE MAKIN' LOVE / EDIE" showFooter={false}>
+<Layout
+  title="darlin. / EDIE / Feel Like Makin' Love"
+  description="目黒区・祐天寺の美容室 darlin. / EDIE / Feel Like Makin\' Loveの公式サイトです。ヘアスタイルを通して日本人の美しさ、強さを表現しながら、音楽、アートなど東京のカルチャーを発信しているサロンです。"
+  showFooter={false}
+>
   <main class="bg-white text-stone-950 font-base">
     {galleryImages.length > 0 ? (
       <ScrollGallery images={galleryImages}>
