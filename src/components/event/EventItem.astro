@@ -26,24 +26,22 @@ const flyer = event.data.flyer;
   </button>
 
   <div class="event-panel px-1 overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out" style="max-height: 0px;">
-    <div class="max-w-[500px] mx-auto">
-      {flyer.length > 0 && (
-        <div class="mt-5 flex flex-col gap-3">
-          {flyer.map((photo) => (
-            <div class="border border-stone-100 overflow-hidden">
-              <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
-            </div>
-          ))}
-        </div>
-      )}
+    {flyer.length > 0 && (
+      <div class="mt-5 flex flex-col gap-3">
+        {flyer.map((photo) => (
+          <div class="border border-stone-100 overflow-hidden">
+            <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
+          </div>
+        ))}
+      </div>
+    )}
 
-      {event.data.description && (
-        <div
-          class="event-description mt-5 px-2 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
-          set:html={event.data.description}
-        />
-      )}
-    </div>
+    {event.data.description && (
+      <div
+        class="event-description mt-5 px-2 text-stone-700 leading-loose tracking-wide font-[330] text-[13px] md:text-[14px]"
+        set:html={event.data.description}
+      />
+    )}
   </div>
 </div>
 
