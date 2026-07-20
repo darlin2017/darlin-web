@@ -1,22 +1,26 @@
 ---
 import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logoDarlin from '../assets/logos/logo-darlin.png';
+import logoEdie from '../assets/logos/logo-edie.png';
+import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
 
 const stores = [
   {
     name: 'darlin.',
-    logo: '/logo-darlin.png',
+    logo: logoDarlin,
     reserveUrl: 'https://airrsv.net/darlinhair/calendar',
     heightClass: 'h-12 md:h-14',
   },
   {
     name: 'EDIE',
-    logo: '/logo-edie.png',
+    logo: logoEdie,
     reserveUrl: 'https://airrsv.net/edietokyo/calendar',
     heightClass: 'h-14 md:h-18',
   },
   {
     name: "Feel Like Makin' Love",
-    logo: '/logo-feellikemakinlove.png',
+    logo: logoFeelLikeMakinLove,
     reserveUrl: 'https://airrsv.net/feellikemakinlove/calendar',
     heightClass: 'h-16 md:h-20',
   },
@@ -45,7 +49,12 @@ const stores = [
   <main class="min-h-screen flex flex-col items-center justify-center gap-18 md:gap-22 px-6">
     {stores.map((store) => (
       <a href={store.reserveUrl} class="hover:opacity-60 transition-opacity">
-        <img src={store.logo} alt={store.name} class={`${store.heightClass} w-auto object-contain`} />
+        <Image
+          src={store.logo}
+          alt={store.name}
+          loading="eager"
+          class={`${store.heightClass} w-auto object-contain`}
+        />
       </a>
     ))}
   </main>

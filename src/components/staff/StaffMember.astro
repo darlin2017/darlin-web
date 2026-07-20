@@ -1,5 +1,6 @@
 ---
 import type { StaffMemberData } from '../../lib/staff';
+import { optimizeImageUrl } from '../../lib/microcms';
 
 interface Props {
   member: StaffMemberData;
@@ -50,7 +51,12 @@ const sharedRatio = Math.max(...member.data.photos.map((photo) => photo.width / 
           class="w-full border border-stone-100 overflow-hidden"
           style={`aspect-ratio: ${sharedRatio}`}
         >
-          <img src={photo.url} alt={member.data.name} class="w-full h-full object-cover block" />
+          <img
+            src={optimizeImageUrl(photo.url, 400)}
+            alt={member.data.name}
+            loading="lazy"
+            class="w-full h-full object-cover block"
+          />
         </div>
       ))}
     </div>

@@ -3,9 +3,10 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   store: CollectionEntry<'access'>;
+  eager?: boolean;
 }
 
-const { store } = Astro.props;
+const { store, eager = false } = Astro.props;
 const telHref = `tel:${store.data.phone.replace(/-/g, '')}`;
 const hoursLines = store.data.hours.split('\n');
 
@@ -13,7 +14,7 @@ const hoursLines = store.data.hours.split('\n');
 const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / photo.height));
 ---
 
-<section>
+<section id={store.id} class="scroll-mt-26 md:scroll-mt-28">
   <h2 class="text-xl md:text-2xl font-medium tracking-wide text-stone-950">
     {store.data.storeName}
   </h2>
@@ -24,7 +25,12 @@ const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / p
         class="w-full border border-stone-100 overflow-hidden"
         style={`aspect-ratio: ${sharedRatio}`}
       >
-        <img src={photo.src} alt={store.data.storeName} class="w-full h-full object-cover block" />
+        <img
+          src={photo.src}
+          alt={store.data.storeName}
+          loading={eager ? 'eager' : 'lazy'}
+          class="w-full h-full object-cover block"
+        />
       </div>
     ))}
   </div>

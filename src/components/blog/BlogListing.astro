@@ -22,7 +22,7 @@ const { posts, archiveGroups, pagination } = Astro.props;
 
   {posts.length > 0 ? (
     <div class="flex flex-col gap-12">
-      {posts.map((post) => <BlogCard post={post} />)}
+      {posts.map((post, index) => <BlogCard post={post} eager={index === 0} />)}
     </div>
   ) : (
     <p class="text-sm text-stone-400">記事がありません。</p>

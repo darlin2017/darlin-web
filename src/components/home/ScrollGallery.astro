@@ -14,9 +14,15 @@ const { images } = Astro.props;
 <section class="scroll-gallery relative bg-white h-dvh flex flex-col overflow-hidden">
   <div class="scroll-gallery-pin flex-1 flex items-center overflow-hidden">
     <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 pt-16">
-      {images.map((image) => (
+      {images.map((image, index) => (
         <div class="w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
-          <img src={image.src} alt={image.alt} class="w-full h-full object-cover block" loading="lazy" decoding="async" />
+          <img
+            src={image.src}
+            alt={image.alt}
+            class="w-full h-full object-cover block"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
         </div>
       ))}
     </div>

@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import logoDarlin from '../assets/logos/logo-darlin.png';
+import logoEdie from '../assets/logos/logo-edie.png';
+import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
 ---
 
 <nav id="site-nav" class="fixed top-0 left-0 w-full backdrop-blur-sm bg-white/70 grid grid-cols-3 items-center px-6 md:px-12 py-6 md:py-4 border-b border-stone-100 z-50">
@@ -10,11 +14,15 @@
 	  </button>
 	</div>
 
-	<div class="justify-self-center flex items-center">
-	  <a href="/" class="hidden md:flex items-center gap-8 hover:opacity-70 transition-opacity">
-		<img src="/logo-darlin.png" alt="darlin. logo" class="h-4.5 w-auto object-contain" />
-		<img src="/logo-edie.png" alt="EDIE logo" class="h-5.5 w-auto object-contain" />
-		<img src="/logo-feellikemakinlove.png" alt="Feel Like Makin' Love logo" class="h-7 w-auto object-contain" />
+	<div class="justify-self-center hidden md:flex items-center gap-8">
+	  <a href="/access#darlin" class="hover:opacity-70 transition-opacity">
+		<Image src={logoDarlin} alt="darlin. logo" loading="eager" class="h-4.5 w-auto object-contain" />
+	  </a>
+	  <a href="/access#edie" class="hover:opacity-70 transition-opacity">
+		<Image src={logoEdie} alt="EDIE logo" loading="eager" class="h-5.5 w-auto object-contain" />
+	  </a>
+	  <a href="/access#feel-like-makin-love" class="hover:opacity-70 transition-opacity">
+		<Image src={logoFeelLikeMakinLove} alt="Feel Like Makin' Love logo" loading="eager" class="h-7 w-auto object-contain" />
 	  </a>
 	</div>
 
@@ -29,11 +37,17 @@
 	  </a>
 	</div>
 
-	<a href="/" class="md:hidden flex items-center gap-6 hover:opacity-70 transition-opacity absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-	  <img src="/logo-darlin.png" alt="darlin. logo" class="h-4 w-auto object-contain" />
-	  <img src="/logo-edie.png" alt="EDIE logo" class="h-4.5 w-auto object-contain" />
-	  <img src="/logo-feellikemakinlove.png" alt="Feel Like Makin' Love logo" class="h-5.5 w-auto object-contain" />
-	</a>
+	<div class="md:hidden flex items-center gap-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+	  <a href="/access#darlin" class="hover:opacity-70 transition-opacity">
+		<Image src={logoDarlin} alt="darlin. logo" loading="eager" class="h-4 w-auto object-contain" />
+	  </a>
+	  <a href="/access#edie" class="hover:opacity-70 transition-opacity">
+		<Image src={logoEdie} alt="EDIE logo" loading="eager" class="h-4.5 w-auto object-contain" />
+	  </a>
+	  <a href="/access#feel-like-makin-love" class="hover:opacity-70 transition-opacity">
+		<Image src={logoFeelLikeMakinLove} alt="Feel Like Makin' Love logo" loading="eager" class="h-5.5 w-auto object-contain" />
+	  </a>
+	</div>
 
 </nav>
 

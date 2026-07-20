@@ -1,22 +1,28 @@
 ---
 import { formatDate, type BlogPost } from '../../lib/blog';
+import { optimizeImageUrl } from '../../lib/microcms';
 
 interface Props {
   post: BlogPost;
+  eager?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, eager = false } = Astro.props;
 ---
 
 <article>
   <a href={`/blog/${post.id}/`} class="group block">
     <div class="max-w-[500px] mx-auto">
       {post.data.eyecatch && (
-        <div class="border border-stone-100 overflow-hidden">
+        <div
+          class="border border-stone-100 overflow-hidden"
+          style={`aspect-ratio: ${post.data.eyecatch.width / post.data.eyecatch.height}`}
+        >
           <img
-            src={post.data.eyecatch.url}
+            src={optimizeImageUrl(post.data.eyecatch.url, 800)}
             alt={post.data.title}
-            class="w-full h-auto block"
+            loading={eager ? 'eager' : 'lazy'}
+            class="w-full h-full object-cover block"
           />
         </div>
       )}

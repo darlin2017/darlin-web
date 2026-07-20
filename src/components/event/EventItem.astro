@@ -1,6 +1,7 @@
 ---
 import type { EventItemData } from '../../lib/event';
 import { formatEventDate } from '../../lib/event';
+import { optimizeImageUrl } from '../../lib/microcms';
 
 interface Props {
   event: EventItemData;
@@ -30,7 +31,12 @@ const flyer = event.data.flyer;
       <div class="mt-5 flex flex-col gap-3">
         {flyer.map((photo) => (
           <div class="border border-stone-100 overflow-hidden">
-            <img src={photo.url} alt={event.data.title} class="w-full h-auto block" />
+            <img
+              src={optimizeImageUrl(photo.url, 800)}
+              alt={event.data.title}
+              loading="lazy"
+              class="w-full h-auto block"
+            />
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { client, type MicroCMSImage } from './microcms';
+import { client, optimizeContentImages, type MicroCMSImage } from './microcms';
 import { getJSTParts } from './date';
 
 export const PAGE_SIZE = 10;
@@ -40,7 +40,7 @@ export async function getSortedPosts(): Promise<BlogPost[]> {
       title: post.title,
       publishDate: new Date(post.publishDate),
       eyecatch: post.eyecatch ?? null,
-      content: post.content,
+      content: optimizeContentImages(post.content, 800),
       author: post.author,
     },
   }));
