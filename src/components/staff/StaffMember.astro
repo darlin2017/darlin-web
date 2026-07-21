@@ -8,8 +8,8 @@ interface Props {
 
 const { member } = Astro.props;
 
-// Match all three photos to the height of the most square one; the others are object-fit: cover-cropped to fit.
-const sharedRatio = Math.max(...member.data.photos.map((photo) => photo.width / photo.height));
+// Match all three photos to the most portrait (tallest) one; the others are object-fit: cover-cropped to fit.
+const sharedRatio = Math.min(...member.data.photos.map((photo) => photo.width / photo.height));
 ---
 
 <div>

@@ -20,7 +20,7 @@ const { images } = Astro.props;
             src={image.src}
             alt={image.alt}
             class="w-full h-full object-cover block"
-            loading={index === 0 ? 'eager' : 'lazy'}
+            loading={index < 3 ? 'eager' : 'lazy'}
             decoding="async"
           />
         </div>

@@ -18,8 +18,8 @@ export type MicroCMSImage = {
 // microCMS's image delivery API resizes/re-encodes on the fly via query params
 // (https://document.microcms.io/manual/image-api), so we can ship right-sized WebP
 // instead of full camera-resolution source files.
-export function optimizeImageUrl(url: string, width: number): string {
-  return `${url}?w=${width}&fm=webp`;
+export function optimizeImageUrl(url: string, width: number, quality = 75): string {
+  return `${url}?w=${width}&fm=webp&q=${quality}`;
 }
 
 // Rewrites <img> src attributes inside microCMS rich-text HTML (blog content, event

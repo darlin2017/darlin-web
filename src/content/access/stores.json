@@ -3,8 +3,8 @@
     "id": "darlin",
     "storeName": "darlin.",
     "photos": [
-      { "src": "/darlin01.jpg", "width": 5159, "height": 7298 },
-      { "src": "/darlin02.png", "width": 1051, "height": 1500 }
+      { "src": "/darlin01.webp", "width": 5159, "height": 7298 },
+      { "src": "/darlin02.webp", "width": 1051, "height": 1500 }
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro-ku Yutenji 2-6-13 アニーハウス 2F",
@@ -18,8 +18,8 @@
     "id": "feel-like-makin-love",
     "storeName": "Feel Like Makin' Love",
     "photos": [
-      { "src": "/FLML01_copy.png", "width": 6083, "height": 8598 },
-      { "src": "/FLML02.png", "width": 4304, "height": 6083 }
+      { "src": "/FLML01.webp", "width": 6083, "height": 8598 },
+      { "src": "/FLML02.webp", "width": 4304, "height": 6083 }
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro-ku Yutenji 2-6-13 アニーハウス 1F",

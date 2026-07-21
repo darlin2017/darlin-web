@@ -2,12 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import ScrollGallery from '../components/home/ScrollGallery.astro';
 import { getHomeGalleries } from '../lib/home';
+import { optimizeImageUrl } from '../lib/microcms';
 
 const homeGalleries = await getHomeGalleries();
 // Resize/re-encode via microCMS's image API instead of shipping full camera-resolution originals
 // (displayed at max 460px wide, so 960px covers retina without sending multi-MB source files).
 const galleryImages = (homeGalleries[0]?.galleryImages ?? []).map((image, index) => ({
-  src: `${image.url}?w=960&fm=webp`,
+  src: optimizeImageUrl(image.url, 960),
   alt: `darlin. gallery ${index + 1}`,
 }));
 ---

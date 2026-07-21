@@ -56,6 +56,21 @@ const flyer = event.data.flyer;
     const panel = button.nextElementSibling as HTMLElement | null;
     if (!panel) return;
 
+    // Images inside the panel (flyer photos, or ones embedded in the rich-text
+    // description) can still be loading when the panel first opens, since they're
+    // lazy-loaded and were never near the viewport while collapsed. If max-height
+    // is only measured once at click time, it locks in a value that's too short
+    // once those images finish loading in — clipping their bottom edge. Re-measure
+    // whenever one finishes loading, but only while the panel is actually open.
+    panel.querySelectorAll('img').forEach((img) => {
+      if (img.complete) return;
+      img.addEventListener('load', () => {
+        if (button.getAttribute('aria-expanded') === 'true') {
+          panel.style.maxHeight = `${panel.scrollHeight}px`;
+        }
+      });
+    });
+
     button.addEventListener('click', () => {
       const isOpen = button.getAttribute('aria-expanded') === 'true';
 
