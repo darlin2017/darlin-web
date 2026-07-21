@@ -31,3 +31,17 @@ export function optimizeContentImages(html: string, width: number): string {
     (_match, prefix, url, _existingQuery, suffix) => `${prefix}${optimizeImageUrl(url, width)}${suffix}`
   );
 }
+
+// microCMS's rich editor leaves alt="" on inserted images. Where a <figure> has a
+// <figcaption>, use that as the alt text; any image still left with alt="" (no
+// caption) falls back to the containing post/event's title.
+export function fixContentImageAlts(html: string, fallbackAlt: string): string {
+  const withCaptionAlts = html.replace(/<figure>([\s\S]*?)<\/figure>/g, (figureMatch, inner) => {
+    const captionMatch = inner.match(/<figcaption>([\s\S]*?)<\/figcaption>/);
+    const captionText = captionMatch?.[1].replace(/<[^>]+>/g, '').trim();
+    if (!captionText) return figureMatch;
+    return figureMatch.replace('alt=""', `alt="${captionText.replace(/"/g, '&quot;')}"`);
+  });
+
+  return withCaptionAlts.replace(/alt=""/g, `alt="${fallbackAlt.replace(/"/g, '&quot;')}"`);
+}

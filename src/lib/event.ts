@@ -1,4 +1,4 @@
-import { client, optimizeContentImages, type MicroCMSImage } from './microcms';
+import { client, fixContentImageAlts, optimizeContentImages, type MicroCMSImage } from './microcms';
 import { getJSTParts } from './date';
 
 export type EventItemData = {
@@ -36,7 +36,7 @@ export async function getEvents(): Promise<EventItemData[]> {
       title: event.title,
       eventDate: new Date(event.eventDate),
       flyer: event.flyer ?? [],
-      description: optimizeContentImages(event.description, 800),
+      description: fixContentImageAlts(optimizeContentImages(event.description, 800), event.title),
     },
   }));
 }

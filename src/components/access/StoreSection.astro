@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { buildHairSalonSchema } from '../../lib/structuredData';
 
 interface Props {
   store: CollectionEntry<'access'>;
@@ -12,9 +13,26 @@ const hoursLines = store.data.hours.split('\n');
 
 // Match both photos to the height of the more square one; the other is object-fit: cover-cropped to fit.
 const sharedRatio = Math.max(...store.data.photos.map((photo) => photo.width / photo.height));
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(store.data.photos[0].src, Astro.site).href;
+const hairSalonSchema = buildHairSalonSchema(
+  {
+    storeName: store.data.storeName,
+    address: store.data.address,
+    postalCode: store.data.postalCode,
+    phone: store.data.phone,
+    hours: store.data.hours,
+    mapUrl: store.data.mapUrl,
+  },
+  pageUrl,
+  imageUrl,
+  store.id
+);
 ---
 
 <section id={store.id} class="scroll-mt-26 md:scroll-mt-28">
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(hairSalonSchema)} />
   <h2 class="text-xl md:text-2xl font-medium tracking-wide text-stone-950">
     {store.data.storeName}
   </h2>

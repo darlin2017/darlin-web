@@ -17,7 +17,11 @@ const flyer = event.data.flyer;
     aria-expanded="false"
     class="event-toggle group/item w-full flex items-baseline justify-between gap-4 text-left cursor-pointer"
   >
-    <span class="flex items-baseline gap-2 text-base md:text-base font-medium tracking-wider text-stone-950 group-hover/item:opacity-60 transition-opacity">
+    <span
+      role="heading"
+      aria-level="2"
+      class="flex items-baseline gap-2 text-base md:text-base font-medium tracking-wider text-stone-950 group-hover/item:opacity-60 transition-opacity"
+    >
       <span class="inline-block transition-transform duration-200 group-aria-expanded/item:rotate-90">›</span>
       {event.data.title}
     </span>
