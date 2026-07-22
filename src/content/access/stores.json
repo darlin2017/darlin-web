@@ -33,8 +33,8 @@
     "id": "edie",
     "storeName": "EDIE",
     "photos": [
-      { "src": "/eddie01.png", "width": 1240, "height": 1550 },
-      { "src": "/eddie02.png", "width": 1240, "height": 1860 }
+      { "src": "/edie01.webp", "width": 800, "height": 1100 },
+      { "src": "/edie02.webp", "width": 800, "height": 1100 }
     ],
     "postalCode": "153-0052",
     "address": "Tokyo Meguro City Yutenji 2-5-4 ブリッヂハイツ 1F",
