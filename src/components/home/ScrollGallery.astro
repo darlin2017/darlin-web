@@ -71,6 +71,9 @@ const { images } = Astro.props;
     // few pixels of movement so an ordinary vertical swipe still scrolls the page.
     const isMobile = () => window.innerWidth < 768;
 
+    // Higher = more horizontal movement per pixel of finger travel.
+    const SWIPE_MULTIPLIER = 3;
+
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartScrollY = 0;
@@ -104,7 +107,7 @@ const { images } = Astro.props;
 
         if (dragAxis === 'horizontal') {
           event.preventDefault();
-          window.scrollTo(0, touchStartScrollY + deltaX / SPEED);
+          window.scrollTo(0, touchStartScrollY + (deltaX * SWIPE_MULTIPLIER) / SPEED);
         }
         // dragAxis === 'vertical': do nothing and let the page scroll natively;
         // ScrollTrigger is already watching that same scroll position.
