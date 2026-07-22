@@ -64,6 +64,61 @@ const { images } = Astro.props;
         invalidateOnRefresh: true,
       },
     });
+
+    // Mobile only: let a horizontal swipe drive the same vertical scroll position
+    // ScrollTrigger already reads, instead of maintaining a second "progress" value
+    // that could drift out of sync with it. The gesture is axis-locked on the first
+    // few pixels of movement so an ordinary vertical swipe still scrolls the page.
+    const isMobile = () => window.innerWidth < 768;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartScrollY = 0;
+    let dragAxis: 'none' | 'horizontal' | 'vertical' = 'none';
+
+    section.addEventListener(
+      'touchstart',
+      (event) => {
+        if (!isMobile()) return;
+        const touch = event.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartScrollY = window.scrollY;
+        dragAxis = 'none';
+      },
+      { passive: true }
+    );
+
+    section.addEventListener(
+      'touchmove',
+      (event) => {
+        if (!isMobile()) return;
+        const touch = event.touches[0];
+        const deltaX = touchStartX - touch.clientX;
+        const deltaY = touchStartY - touch.clientY;
+
+        if (dragAxis === 'none') {
+          if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) return;
+          dragAxis = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
+        }
+
+        if (dragAxis === 'horizontal') {
+          event.preventDefault();
+          window.scrollTo(0, touchStartScrollY + deltaX / SPEED);
+        }
+        // dragAxis === 'vertical': do nothing and let the page scroll natively;
+        // ScrollTrigger is already watching that same scroll position.
+      },
+      { passive: false }
+    );
+
+    section.addEventListener(
+      'touchend',
+      () => {
+        dragAxis = 'none';
+      },
+      { passive: true }
+    );
   });
 </script>
 
