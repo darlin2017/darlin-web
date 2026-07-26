@@ -1,11 +1,21 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import { buildHairSalonSchema } from '../../lib/structuredData';
+import darlinLogo from '../../assets/access/darlin02_access.png';
+import edieLogo from '../../assets/access/edie02_access.png';
+import flmlLogo from '../../assets/access/flml02_access.png';
 
 interface Props {
   store: CollectionEntry<'access'>;
   eager?: boolean;
 }
+
+const STORE_LOGOS: Record<string, { src: ImageMetadata; heightClass: string }> = {
+  darlin: { src: darlinLogo, heightClass: 'h-16 md:h-20' },
+  edie: { src: edieLogo, heightClass: 'h-16 md:h-18' },
+  'feel-like-makin-love': { src: flmlLogo, heightClass: 'h-20 md:h-22' },
+};
 
 const { store, eager = false } = Astro.props;
 const telHref = `tel:${store.data.phone.replace(/-/g, '')}`;
@@ -33,11 +43,16 @@ const hairSalonSchema = buildHairSalonSchema(
 
 <section id={store.id} class="scroll-mt-26 md:scroll-mt-28">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(hairSalonSchema)} />
-  <h2 class="text-xl md:text-2xl font-medium tracking-wide text-stone-950">
-    {store.data.storeName}
+  <h2>
+    <Image
+      src={STORE_LOGOS[store.id].src}
+      alt={store.data.storeName}
+      loading={eager ? 'eager' : 'lazy'}
+      class={`${STORE_LOGOS[store.id].heightClass} w-auto object-contain`}
+    />
   </h2>
 
-  <div class="mt-6 grid grid-cols-2 gap-0.5">
+  <div class="mt-4 grid grid-cols-2 gap-0.5">
     {store.data.photos.map((photo) => (
       <div
         class="w-full border border-stone-100 overflow-hidden"
