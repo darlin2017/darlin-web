@@ -120,25 +120,63 @@ const { images } = Astro.props;
     // leaving the gallery stopped mid-image. Rounding to the nearest slide index
     // naturally means a drag past the halfway point advances to the next/prev
     // slide, short of that snaps back — matching a standard carousel feel.
+    //
+    // Uses a GSAP-driven tween (re-asserting window.scrollTo every frame for the
+    // full duration) rather than a single native scrollTo call, since
+    // ScrollTrigger.normalizeScroll's own momentum handling on mobile can
+    // otherwise overwrite a one-shot scrollTo on the very next frame.
     function snapToNearestImage() {
-      if (!scrollTriggerInstance) return;
-      const slides = Array.from(track!.children) as HTMLElement[];
-      if (slides.length < 2) return;
+      console.log('[scroll-gallery] snapToNearestImage() called');
+      if (!scrollTriggerInstance) {
+        console.log('[scroll-gallery] aborting: no scrollTriggerInstance');
+        return;
+      }
+      try {
+        const slides = Array.from(track!.children) as HTMLElement[];
+        if (slides.length < 2) {
+          console.log('[scroll-gallery] aborting: fewer than 2 slides', slides.length);
+          return;
+        }
 
-      const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
-      const scrollLength = getScrollLength();
-      const currentX = scrollLength * scrollTriggerInstance.progress;
-      const nearestIndex = Math.round(currentX / pitch);
-      const clampedIndex = Math.max(0, Math.min(slides.length - 1, nearestIndex));
-      const targetX = Math.min(clampedIndex * pitch, scrollLength);
-      const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
+        const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
+        const scrollLength = getScrollLength();
+        const progress = scrollTriggerInstance.progress;
+        const currentX = scrollLength * progress;
+        const nearestIndex = Math.round(currentX / pitch);
+        const clampedIndex = Math.max(0, Math.min(slides.length - 1, nearestIndex));
+        const targetX = Math.min(clampedIndex * pitch, scrollLength);
+        const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
 
-      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+        console.log('[scroll-gallery] snap target', {
+          pitch,
+          scrollLength,
+          progress,
+          currentX,
+          nearestIndex,
+          clampedIndex,
+          targetX,
+          targetScrollY,
+          currentScrollY: window.scrollY,
+        });
+
+        const proxy = { y: window.scrollY };
+        gsap.to(proxy, {
+          y: targetScrollY,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: true,
+          onUpdate: () => window.scrollTo(0, proxy.y),
+          onComplete: () => console.log('[scroll-gallery] snap complete', { finalScrollY: window.scrollY }),
+        });
+      } catch (err) {
+        console.log('[scroll-gallery] snapToNearestImage error', err);
+      }
     }
 
     section.addEventListener(
       'touchend',
       () => {
+        console.log('[scroll-gallery] touchend fired', { isMobile: isMobile(), dragAxis });
         if (isMobile() && dragAxis === 'horizontal') {
           snapToNearestImage();
         }
