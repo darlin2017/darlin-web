@@ -40,8 +40,12 @@ const { images } = Astro.props;
   gsap.registerPlugin(ScrollTrigger);
 
   // Smooths out mobile Safari/Chrome scroll jank around pinned sections
-  // (address bar resize, momentum scroll conflicts with the pin).
-  ScrollTrigger.normalizeScroll(true);
+  // (address bar resize, momentum scroll conflicts with the pin). Returns a
+  // normalizer that owns the (virtualized) scroll position on touch devices —
+  // programmatic scroll changes must go through normalizer.scrollY(), since a
+  // raw window.scrollTo() doesn't reliably reach ScrollTrigger's tracked
+  // progress once normalization has taken over.
+  const normalizer = ScrollTrigger.normalizeScroll(true);
 
   document.querySelectorAll<HTMLElement>('.scroll-gallery').forEach((section) => {
     const track = section.querySelector<HTMLElement>('.scroll-gallery-track');
@@ -64,7 +68,15 @@ const { images } = Astro.props;
         invalidateOnRefresh: true,
       },
     });
-    const scrollTriggerInstance = scrollTween.scrollTrigger;
+    const scrollTriggerInstance = scrollTween.scrollTrigger!;
+
+    const setScrollY = (y: number) => {
+      if (normalizer) {
+        normalizer.scrollY(y);
+      } else {
+        window.scrollTo(0, y);
+      }
+    };
 
     // Mobile only: let a horizontal swipe drive the same vertical scroll position
     // ScrollTrigger already reads, instead of maintaining a second "progress" value
@@ -75,10 +87,21 @@ const { images } = Astro.props;
     // Higher = more horizontal movement per pixel of finger travel.
     const SWIPE_MULTIPLIER = 3;
 
+    // How far (as a fraction of one slide's width) a swipe must travel from the
+    // slide shown at touchstart before it counts as a deliberate move to the
+    // next/prev slide, rather than snapping back to where it started.
+    const DRAG_THRESHOLD_RATIO = 0.2;
+
+    const getSlidePitch = () => {
+      const slides = Array.from(track!.children) as HTMLElement[];
+      return slides.length >= 2 ? slides[1].offsetLeft - slides[0].offsetLeft : null;
+    };
+
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartScrollY = 0;
     let dragAxis: 'none' | 'horizontal' | 'vertical' = 'none';
+    let dragStartIndex = 0;
 
     section.addEventListener(
       'touchstart',
@@ -89,6 +112,12 @@ const { images } = Astro.props;
         touchStartY = touch.clientY;
         touchStartScrollY = window.scrollY;
         dragAxis = 'none';
+
+        const pitch = getSlidePitch();
+        if (pitch) {
+          const currentX = getScrollLength() * scrollTriggerInstance.progress;
+          dragStartIndex = Math.round(currentX / pitch);
+        }
       },
       { passive: true }
     );
@@ -108,7 +137,7 @@ const { images } = Astro.props;
 
         if (dragAxis === 'horizontal') {
           event.preventDefault();
-          window.scrollTo(0, touchStartScrollY + (deltaX * SWIPE_MULTIPLIER) / SPEED);
+          setScrollY(touchStartScrollY + (deltaX * SWIPE_MULTIPLIER) / SPEED);
         }
         // dragAxis === 'vertical': do nothing and let the page scroll natively;
         // ScrollTrigger is already watching that same scroll position.
@@ -116,67 +145,45 @@ const { images } = Astro.props;
       { passive: false }
     );
 
-    // Snaps to the nearest slide's edge after a horizontal drag ends, instead of
-    // leaving the gallery stopped mid-image. Rounding to the nearest slide index
-    // naturally means a drag past the halfway point advances to the next/prev
-    // slide, short of that snaps back — matching a standard carousel feel.
-    //
-    // Uses a GSAP-driven tween (re-asserting window.scrollTo every frame for the
-    // full duration) rather than a single native scrollTo call, since
-    // ScrollTrigger.normalizeScroll's own momentum handling on mobile can
-    // otherwise overwrite a one-shot scrollTo on the very next frame.
+    // Snaps to the next/prev slide's edge after a horizontal drag ends, instead
+    // of leaving the gallery stopped mid-image. Direction is judged relative to
+    // the slide shown when the drag started: moving past DRAG_THRESHOLD_RATIO of
+    // one slide's width in either direction advances that way, anything short of
+    // that snaps back — so a light, short swipe is enough to change slides.
     function snapToNearestImage() {
-      console.log('[scroll-gallery] snapToNearestImage() called');
-      if (!scrollTriggerInstance) {
-        console.log('[scroll-gallery] aborting: no scrollTriggerInstance');
-        return;
+      const slides = Array.from(track!.children) as HTMLElement[];
+      if (slides.length < 2) return;
+
+      const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
+      const scrollLength = getScrollLength();
+      const currentX = scrollLength * scrollTriggerInstance.progress;
+      const startX = dragStartIndex * pitch;
+      const deltaRatio = (currentX - startX) / pitch;
+
+      let targetIndex = dragStartIndex;
+      if (deltaRatio > DRAG_THRESHOLD_RATIO) {
+        targetIndex = dragStartIndex + 1;
+      } else if (deltaRatio < -DRAG_THRESHOLD_RATIO) {
+        targetIndex = dragStartIndex - 1;
       }
-      try {
-        const slides = Array.from(track!.children) as HTMLElement[];
-        if (slides.length < 2) {
-          console.log('[scroll-gallery] aborting: fewer than 2 slides', slides.length);
-          return;
-        }
 
-        const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
-        const scrollLength = getScrollLength();
-        const progress = scrollTriggerInstance.progress;
-        const currentX = scrollLength * progress;
-        const nearestIndex = Math.round(currentX / pitch);
-        const clampedIndex = Math.max(0, Math.min(slides.length - 1, nearestIndex));
-        const targetX = Math.min(clampedIndex * pitch, scrollLength);
-        const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
+      const clampedIndex = Math.max(0, Math.min(slides.length - 1, targetIndex));
+      const targetX = Math.min(clampedIndex * pitch, scrollLength);
+      const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
 
-        console.log('[scroll-gallery] snap target', {
-          pitch,
-          scrollLength,
-          progress,
-          currentX,
-          nearestIndex,
-          clampedIndex,
-          targetX,
-          targetScrollY,
-          currentScrollY: window.scrollY,
-        });
-
-        const proxy = { y: window.scrollY };
-        gsap.to(proxy, {
-          y: targetScrollY,
-          duration: 0.4,
-          ease: 'power2.out',
-          overwrite: true,
-          onUpdate: () => window.scrollTo(0, proxy.y),
-          onComplete: () => console.log('[scroll-gallery] snap complete', { finalScrollY: window.scrollY }),
-        });
-      } catch (err) {
-        console.log('[scroll-gallery] snapToNearestImage error', err);
-      }
+      const proxy = { y: window.scrollY };
+      gsap.to(proxy, {
+        y: targetScrollY,
+        duration: 0.4,
+        ease: 'power2.out',
+        overwrite: true,
+        onUpdate: () => setScrollY(proxy.y),
+      });
     }
 
     section.addEventListener(
       'touchend',
       () => {
-        console.log('[scroll-gallery] touchend fired', { isMobile: isMobile(), dragAxis });
         if (isMobile() && dragAxis === 'horizontal') {
           snapToNearestImage();
         }

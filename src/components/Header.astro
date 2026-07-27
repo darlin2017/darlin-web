@@ -120,6 +120,13 @@ import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
     isOpen() ? closeMenu() : openMenu();
   });
 
+  document.addEventListener('click', (event) => {
+    if (!isOpen()) return;
+    const target = event.target as Node;
+    if (nav?.contains(target) || dropdown?.contains(target)) return;
+    closeMenu();
+  });
+
   window.addEventListener('resize', () => {
     syncNavOffset();
     if (isOpen()) openMenu();
