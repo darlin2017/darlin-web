@@ -52,7 +52,7 @@ const { images } = Astro.props;
     const getScrollLength = () => track.scrollWidth - window.innerWidth;
     if (getScrollLength() <= 0) return;
 
-    gsap.to(track, {
+    const scrollTween = gsap.to(track, {
       x: () => -getScrollLength(),
       ease: 'none',
       scrollTrigger: {
@@ -64,6 +64,7 @@ const { images } = Astro.props;
         invalidateOnRefresh: true,
       },
     });
+    const scrollTriggerInstance = scrollTween.scrollTrigger;
 
     // Mobile only: let a horizontal swipe drive the same vertical scroll position
     // ScrollTrigger already reads, instead of maintaining a second "progress" value
@@ -115,9 +116,32 @@ const { images } = Astro.props;
       { passive: false }
     );
 
+    // Snaps to the nearest slide's edge after a horizontal drag ends, instead of
+    // leaving the gallery stopped mid-image. Rounding to the nearest slide index
+    // naturally means a drag past the halfway point advances to the next/prev
+    // slide, short of that snaps back — matching a standard carousel feel.
+    function snapToNearestImage() {
+      if (!scrollTriggerInstance) return;
+      const slides = Array.from(track!.children) as HTMLElement[];
+      if (slides.length < 2) return;
+
+      const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
+      const scrollLength = getScrollLength();
+      const currentX = scrollLength * scrollTriggerInstance.progress;
+      const nearestIndex = Math.round(currentX / pitch);
+      const clampedIndex = Math.max(0, Math.min(slides.length - 1, nearestIndex));
+      const targetX = Math.min(clampedIndex * pitch, scrollLength);
+      const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
+
+      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+    }
+
     section.addEventListener(
       'touchend',
       () => {
+        if (isMobile() && dragAxis === 'horizontal') {
+          snapToNearestImage();
+        }
         dragAxis = 'none';
       },
       { passive: true }
