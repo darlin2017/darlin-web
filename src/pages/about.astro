@@ -3,34 +3,55 @@ import Layout from '../layouts/Layout.astro';
 
 // TEMP: "Feel Like Makin' Love"'s existing philosophy text, used as placeholder copy
 // until the unified 3-salon (darlin. / EDIE / Feel Like Makin' Love) statement is finalized.
-const ABOUT_TEXT = [
-  'We believe this is our happiness and an innate human desire.',
-  "We see a beauty salon not just as a place for hairstyling, but as a space where people gather, a birthplace of community. This, to us, is a deeply creative act.",
-  'And we believe it plays the most important role in the world today.',
-  'The truth is always within yourself.',
-  'If you focus only on gaining approval from others, you will never be able to express your true self.',
-  'True beauty lies in expressing who you are, not in disguising yourself.',
-  'At times, it may feel embarrassing, painful, or leave you feeling exposed.',
-  'But we believe that the expression that emerges after overcoming those feelings is what defines individuality.',
-  'And that is why we will never stop expressing ourselves.',
-];
 ---
 
 <Layout
   title="About | darlin. / EDIE / Feel Like Makin' Love"
   description="darlin. / EDIE / Feel Like Makin\' Loveのフィロソフィー。ヘアスタイルを通した表現と、その先にある本当の美しさについて。"
 >
-  <main class="max-md:min-h-[calc(100svh-64px)] md:h-[calc(100dvh-88px)] flex items-center justify-center px-8 md:px-12 py-12">
-    <div class="max-w-xl flex flex-col items-center text-center">
-      <h1 class="text-sm md:text-[20px] font-medium text-stone-700 leading-relaxed tracking-wide mb-6">
-        -The Possibilities of Hair and Makeup<br />
-        Communicating through the body
-      </h1>
+  <main class="max-md:min-h-[calc(100svh-64px)] md:h-[calc(100dvh-88px)] pt-26 md:pt-28 flex flex-col px-8 md:px-12">
+    <div class="flex-1 flex items-center justify-center pt-2 pb-10 md:pt-6 md:pb-18">
+      <div class="max-w-xl flex flex-col items-center text-center">
+        <h1 class="text-sm md:text-[20px] font-medium text-stone-700 leading-relaxed tracking-wide mb-6">
+          The Possibilities of Hair and Makeup<br />
+          Communicating through the body
+        </h1>
 
-      <div class="flex flex-col gap-0.5 text-center">
-        {ABOUT_TEXT.map((line) => (
-          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">{line}</p>
-        ))}
+        <div class="flex flex-col gap-0.5 text-center py-5">
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            We believe this is our happiness and<br class="md:hidden" />
+            an innate human desire.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            We see a beauty salon not just as a place for hairstyling, but as a space where people gather, a birthplace of community.<br />
+            This, to us, is a deeply creative act.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            And we believe it plays the most important role<br class="md:hidden" />
+            in the world today.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            The truth is always within yourself.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            If you focus only on gaining approval from others, you will never be able to express your true self.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            True beauty lies in expressing who you are,<br class="md:hidden" />
+            not in disguising yourself.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            At times, it may feel embarrassing, painful,<br class="md:hidden" />
+            or leave you feeling exposed.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            But we believe that the expression that emerges after overcoming those feelings is what defines individuality.
+          </p>
+          <p class="text-[12px] md:text-[16px] text-stone-700 leading-relaxed tracking-wide">
+            And that is why we will never stop<br class="md:hidden" />
+            expressing ourselves.
+          </p>
+        </div>
       </div>
     </div>
   </main>
