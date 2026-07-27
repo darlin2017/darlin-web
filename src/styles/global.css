@@ -14,3 +14,10 @@
   --font-base: "Switzer", "Noto Sans JP", sans-serif;
   --color-white: #FFFDFA;
 }
+
+/* Disables iOS's elastic rubber-band overscroll, which otherwise visually
+   conflicts with GSAP-pinned sections (e.g. the home gallery) for a frame
+   or two during a fast scroll near the top/bottom of the page. */
+html, body {
+  overscroll-behavior-y: none;
+}
