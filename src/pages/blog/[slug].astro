@@ -72,8 +72,17 @@ const { post, prev, next } = Astro.props;
     padding-left: 1.25em;
     margin-bottom: 1.5em;
   }
+  .blog-content :global(ol) {
+    list-style: decimal;
+    padding-left: 1.25em;
+    margin-bottom: 1.5em;
+  }
   .blog-content :global(li) {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.4em;
+    line-height: 1.4;
+  }
+  .blog-content :global(li:last-child) {
+    margin-bottom: 0;
   }
   .blog-content :global(figcaption) {
     margin-top: 0.1em;
