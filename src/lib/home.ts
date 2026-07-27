@@ -5,7 +5,6 @@ export type HomeGallery = {
   galleryImages: MicroCMSImage[];
 };
 
-// Data-fetching only for now — no page currently renders this.
 export async function getHomeGalleries(): Promise<HomeGallery[]> {
   const { contents } = await client.getList<HomeGallery>({
     endpoint: 'home',

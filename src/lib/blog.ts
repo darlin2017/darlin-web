@@ -40,7 +40,7 @@ export async function getSortedPosts(): Promise<BlogPost[]> {
       title: post.title,
       publishDate: new Date(post.publishDate),
       eyecatch: post.eyecatch ?? null,
-      content: fixContentImageAlts(optimizeContentImages(post.content, 800), post.title),
+      content: fixContentImageAlts(optimizeContentImages(post.content ?? '', 800), post.title),
       author: post.author,
     },
   }));

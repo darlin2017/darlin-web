@@ -36,7 +36,7 @@ export async function getEvents(): Promise<EventItemData[]> {
       title: event.title,
       eventDate: new Date(event.eventDate),
       flyer: event.flyer ?? [],
-      description: fixContentImageAlts(optimizeContentImages(event.description, 800), event.title),
+      description: fixContentImageAlts(optimizeContentImages(event.description ?? '', 800), event.title),
     },
   }));
 }

@@ -9,7 +9,10 @@ interface Props {
 const { member } = Astro.props;
 
 // Match all three photos to the most portrait (tallest) one; the others are object-fit: cover-cropped to fit.
-const sharedRatio = Math.min(...member.data.photos.map((photo) => photo.width / photo.height));
+const sharedRatio =
+  member.data.photos.length > 0
+    ? Math.min(...member.data.photos.map((photo) => photo.width / photo.height))
+    : 1;
 ---
 
 <div>
@@ -21,46 +24,52 @@ const sharedRatio = Math.min(...member.data.photos.map((photo) => photo.width / 
     {member.data.position}
   </p>
 
-  <a
-    href={member.data.instagram}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="mt-2 inline-flex items-center gap-1.5 text-xs tracking-[0.1em] text-stone-500 hover:text-stone-950 transition-colors"
-  >
-    <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5">
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" />
-    </svg>
-    Instagram
-  </a>
+  {member.data.instagram && (
+    <a
+      href={member.data.instagram}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mt-2 inline-flex items-center gap-1.5 text-xs tracking-[0.1em] text-stone-500 hover:text-stone-950 transition-colors"
+    >
+      <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" />
+      </svg>
+      Instagram
+    </a>
+  )}
 
-  <button
-    type="button"
-    aria-expanded="false"
-    class="staff-photos-toggle group/photos mt-1 flex items-center gap-1.5 text-xs tracking-[0.15em] text-stone-400 hover:text-stone-950 transition-colors cursor-pointer"
-  >
-    <span class="inline-block transition-transform duration-200 group-aria-expanded/photos:rotate-90">›</span>
-    Photos
-  </button>
+  {member.data.photos.length > 0 && (
+    <>
+      <button
+        type="button"
+        aria-expanded="false"
+        class="staff-photos-toggle group/photos mt-1 flex items-center gap-1.5 text-xs tracking-[0.15em] text-stone-400 hover:text-stone-950 transition-colors cursor-pointer"
+      >
+        <span class="inline-block transition-transform duration-200 group-aria-expanded/photos:rotate-90">›</span>
+        Photos
+      </button>
 
-  <div class="staff-photos-panel overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out" style="max-height: 0px;">
-    <div class="grid grid-cols-3 gap-0.5 mt-3">
-      {member.data.photos.map((photo) => (
-        <div
-          class="w-full border border-stone-100 overflow-hidden"
-          style={`aspect-ratio: ${sharedRatio}`}
-        >
-          <img
-            src={optimizeImageUrl(photo.url, 400)}
-            alt={member.data.name}
-            loading="lazy"
-            class="w-full h-full object-cover block"
-          />
+      <div class="staff-photos-panel overflow-hidden opacity-0 transition-[max-height,opacity] duration-300 ease-in-out" style="max-height: 0px;">
+        <div class="grid grid-cols-3 gap-0.5 mt-3">
+          {member.data.photos.map((photo) => (
+            <div
+              class="w-full border border-stone-100 overflow-hidden"
+              style={`aspect-ratio: ${sharedRatio}`}
+            >
+              <img
+                src={optimizeImageUrl(photo.url, 400)}
+                alt={member.data.name}
+                loading="lazy"
+                class="w-full h-full object-cover block"
+              />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  </div>
+      </div>
+    </>
+  )}
 </div>
 
 <script>
