@@ -25,6 +25,11 @@ const stores = [
     heightClass: 'h-16 md:h-20',
   },
 ];
+
+// Only loaded in production builds, so localhost/`astro dev` sessions are
+// never tracked and never even emit the script tags into the HTML.
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+const enableGA = import.meta.env.PROD && Boolean(gaId);
 ---
 
 <!DOCTYPE html>
@@ -45,6 +50,18 @@ const stores = [
   <link rel="manifest" href="/site.webmanifest" />
 
   <link rel="preload" href="/fonts/switzer/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
+
+  {enableGA && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', gaId);
+      </script>
+    </>
+  )}
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
