@@ -2,22 +2,22 @@
 import type { GetStaticPaths, Page } from 'astro';
 import Layout from '../../../layouts/Layout.astro';
 import BlogListing from '../../../components/blog/BlogListing.astro';
-import { getSortedPosts, getArchiveGroups, PAGE_SIZE, type BlogPost } from '../../../lib/blog';
+import { getSortedPosts, getArchiveGroups, PAGE_SIZE, type BlogPost, type ArchiveGroup } from '../../../lib/blog';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getSortedPosts();
-  const pages = paginate(posts, { pageSize: PAGE_SIZE });
+  const archiveGroups = getArchiveGroups(posts);
+  const pages = paginate(posts, { pageSize: PAGE_SIZE, props: { archiveGroups } });
   // page 1 lives at /blog/ (see ../index.astro); only generate page 2+
   return pages.filter((p) => Number(p.params.page) !== 1);
 }) satisfies GetStaticPaths;
 
 interface Props {
   page: Page<BlogPost>;
+  archiveGroups: ArchiveGroup[];
 }
 
-const { page } = Astro.props;
-const allPosts = await getSortedPosts();
-const archiveGroups = getArchiveGroups(allPosts);
+const { page, archiveGroups } = Astro.props;
 ---
 
 <Layout

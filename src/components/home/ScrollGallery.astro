@@ -13,9 +13,9 @@ const { images } = Astro.props;
 
 <section class="scroll-gallery relative bg-white h-dvh flex flex-col overflow-hidden">
   <div class="scroll-gallery-pin flex-1 flex items-center overflow-hidden">
-    <div class="scroll-gallery-track flex gap-2 md:gap-2 px-4 md:px-4 pt-16">
+    <div class="scroll-gallery-track flex gap-2 pt-16">
       {images.map((image, index) => (
-        <div class="w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
+        <div class="scroll-gallery-slide w-[350px] md:w-[460px] aspect-[3/4] shrink-0 border border-stone-100 overflow-hidden">
           <img
             src={image.src}
             alt={image.alt}
@@ -34,184 +34,126 @@ const { images } = Astro.props;
 </section>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Prevents iOS Safari's address-bar show/hide during momentum scrolling from
-  // firing a resize event that triggers ScrollTrigger's default refresh() —
-  // refreshing mid-scroll while a section is pinned causes a one-frame jump.
-  ScrollTrigger.config({ ignoreMobileResize: true });
-
-  // Smooths out mobile Safari/Chrome scroll jank around pinned sections
-  // (address bar resize, momentum scroll conflicts with the pin). Returns a
-  // normalizer that owns the (virtualized) scroll position on touch devices —
-  // programmatic scroll changes must go through normalizer.scrollY(), since a
-  // raw window.scrollTo() doesn't reliably reach ScrollTrigger's tracked
-  // progress once normalization has taken over.
+  // Device split is by input capability, not viewport width — a touch tablet
+  // (e.g. iPad mini) can share a width with a desktop breakpoint, so width
+  // alone can't tell them apart. Only devices whose PRIMARY input is a mouse
+  // or trackpad (hover + fine pointer) get the GSAP ScrollTrigger pin/scrub
+  // setup; everything else uses the plain native scrolling container defined
+  // in the <style> block (phone vs tablet sub-split is CSS-only too, by
+  // width, since neither needs any JS).
   //
-  // momentum is reduced from the default (1) because a fast fling's simulated
-  // deceleration was overshooting and correcting itself a couple of frames
-  // later — visible as the pinned gallery briefly floating out of place.
-  //
-  // KNOWN ISSUE: on a very fast/forceful mobile fling (either axis), this
-  // brief float-then-settle can still occur. Investigated at length — traced
-  // to normalizeScroll's internal momentum position and the real window.scrollY
-  // briefly disagreeing mid-flick — but not fully eliminated without a deeper
-  // rework (e.g. driving scroll fully manually instead of via normalizeScroll).
-  // Accepted as a minor known limitation for now.
-  const normalizer = ScrollTrigger.normalizeScroll({ momentum: 1 });
+  // GSAP + ScrollTrigger (~114KB) are only ever relevant to that desktop
+  // path, so they're dynamically imported — Vite splits them into a separate
+  // chunk that's simply never requested on phones/tablets, instead of being
+  // bundled into a script every visitor downloads regardless of device.
+  const DESKTOP_QUERY = '(hover: hover) and (pointer: fine)';
 
-  document.querySelectorAll<HTMLElement>('.scroll-gallery').forEach((section) => {
-    const track = section.querySelector<HTMLElement>('.scroll-gallery-track');
-    if (!track) return;
+  let desktopGallerySetup = false;
 
-    // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
-    const SPEED = 0.65;
-    const getScrollLength = () => track.scrollWidth - window.innerWidth;
-    if (getScrollLength() <= 0) return;
+  async function setupDesktopGallery() {
+    if (desktopGallerySetup) return;
+    desktopGallerySetup = true;
 
-    const scrollTween = gsap.to(track, {
-      x: () => -getScrollLength(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${getScrollLength() / SPEED}`,
-        scrub: 1.2,
-        pin: true,
-        invalidateOnRefresh: true,
-      },
-    });
-    const scrollTriggerInstance = scrollTween.scrollTrigger!;
+    const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+      import('gsap'),
+      import('gsap/ScrollTrigger'),
+    ]);
+    gsap.registerPlugin(ScrollTrigger);
 
-    const setScrollY = (y: number) => {
-      if (normalizer) {
-        normalizer.scrollY(y);
-      } else {
-        window.scrollTo(0, y);
-      }
-    };
+    const mm = gsap.matchMedia();
 
-    // Mobile only: let a horizontal swipe drive the same vertical scroll position
-    // ScrollTrigger already reads, instead of maintaining a second "progress" value
-    // that could drift out of sync with it. The gesture is axis-locked on the first
-    // few pixels of movement so an ordinary vertical swipe still scrolls the page.
-    const isMobile = () => window.innerWidth < 768;
+    mm.add(DESKTOP_QUERY, () => {
+      // Prevents iOS/mobile-browser address-bar show/hide from firing a
+      // resize event that triggers ScrollTrigger's default refresh() —
+      // refreshing mid-scroll while a section is pinned causes a one-frame
+      // jump. Mostly relevant to hybrid laptops (touchscreen + trackpad)
+      // that land here.
+      ScrollTrigger.config({ ignoreMobileResize: true });
 
-    // Higher = more horizontal movement per pixel of finger travel.
-    const SWIPE_MULTIPLIER = 3;
+      // Smooths out scroll jank around pinned sections for any touch input a
+      // mouse-primary device might still also receive.
+      ScrollTrigger.normalizeScroll({ momentum: 1 });
 
-    // How far (as a fraction of one slide's width) a swipe must travel from the
-    // slide shown at touchstart before it counts as a deliberate move to the
-    // next/prev slide, rather than snapping back to where it started.
-    const DRAG_THRESHOLD_RATIO = 0.2;
+      document.querySelectorAll<HTMLElement>('.scroll-gallery').forEach((section) => {
+        const track = section.querySelector<HTMLElement>('.scroll-gallery-track');
+        if (!track) return;
 
-    const getSlidePitch = () => {
-      const slides = Array.from(track!.children) as HTMLElement[];
-      return slides.length >= 2 ? slides[1].offsetLeft - slides[0].offsetLeft : null;
-    };
+        // Lower SPEED = more vertical scroll needed to cover the same horizontal distance (feels slower).
+        const SPEED = 0.65;
+        const getScrollLength = () => track.scrollWidth - window.innerWidth;
+        if (getScrollLength() <= 0) return;
 
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartScrollY = 0;
-    let dragAxis: 'none' | 'horizontal' | 'vertical' = 'none';
-    let dragStartIndex = 0;
-
-    section.addEventListener(
-      'touchstart',
-      (event) => {
-        if (!isMobile()) return;
-        const touch = event.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        touchStartScrollY = window.scrollY;
-        dragAxis = 'none';
-
-        const pitch = getSlidePitch();
-        if (pitch) {
-          const currentX = getScrollLength() * scrollTriggerInstance.progress;
-          dragStartIndex = Math.round(currentX / pitch);
-        }
-      },
-      { passive: true }
-    );
-
-    section.addEventListener(
-      'touchmove',
-      (event) => {
-        if (!isMobile()) return;
-        const touch = event.touches[0];
-        const deltaX = touchStartX - touch.clientX;
-        const deltaY = touchStartY - touch.clientY;
-
-        if (dragAxis === 'none') {
-          if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) return;
-          dragAxis = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
-        }
-
-        if (dragAxis === 'horizontal') {
-          event.preventDefault();
-          setScrollY(touchStartScrollY + (deltaX * SWIPE_MULTIPLIER) / SPEED);
-        }
-        // dragAxis === 'vertical': do nothing and let the page scroll natively;
-        // ScrollTrigger is already watching that same scroll position.
-      },
-      { passive: false }
-    );
-
-    // Snaps to the next/prev slide's edge after a horizontal drag ends, instead
-    // of leaving the gallery stopped mid-image. Direction is judged relative to
-    // the slide shown when the drag started: moving past DRAG_THRESHOLD_RATIO of
-    // one slide's width in either direction advances that way, anything short of
-    // that snaps back — so a light, short swipe is enough to change slides.
-    function snapToNearestImage() {
-      const slides = Array.from(track!.children) as HTMLElement[];
-      if (slides.length < 2) return;
-
-      const pitch = slides[1].offsetLeft - slides[0].offsetLeft;
-      const scrollLength = getScrollLength();
-      const currentX = scrollLength * scrollTriggerInstance.progress;
-      const startX = dragStartIndex * pitch;
-      const deltaRatio = (currentX - startX) / pitch;
-
-      let targetIndex = dragStartIndex;
-      if (deltaRatio > DRAG_THRESHOLD_RATIO) {
-        targetIndex = dragStartIndex + 1;
-      } else if (deltaRatio < -DRAG_THRESHOLD_RATIO) {
-        targetIndex = dragStartIndex - 1;
-      }
-
-      const clampedIndex = Math.max(0, Math.min(slides.length - 1, targetIndex));
-      const targetX = Math.min(clampedIndex * pitch, scrollLength);
-      const targetScrollY = scrollTriggerInstance.start + targetX / SPEED;
-
-      const proxy = { y: window.scrollY };
-      gsap.to(proxy, {
-        y: targetScrollY,
-        duration: 0.4,
-        ease: 'power2.out',
-        overwrite: true,
-        onUpdate: () => setScrollY(proxy.y),
+        gsap.to(track, {
+          x: () => -getScrollLength(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${getScrollLength() / SPEED}`,
+            scrub: 1,
+            pin: true,
+            invalidateOnRefresh: true,
+          },
+        });
       });
-    }
+    });
+  }
 
-    section.addEventListener(
-      'touchend',
-      () => {
-        if (isMobile() && dragAxis === 'horizontal') {
-          snapToNearestImage();
-        }
-        dragAxis = 'none';
+  const desktopMql = window.matchMedia(DESKTOP_QUERY);
+
+  if (desktopMql.matches) {
+    setupDesktopGallery();
+  } else {
+    // Covers a device switching primary input mid-session (e.g. a mouse
+    // plugged into a tablet) without ever loading GSAP for devices that
+    // stay touch-only the whole time.
+    desktopMql.addEventListener(
+      'change',
+      (event) => {
+        if (event.matches) setupDesktopGallery();
       },
-      { passive: true }
+      { once: true }
     );
-  });
+  }
 </script>
 
 <style>
   .scroll-gallery-track {
     will-change: transform;
+    scrollbar-width: none;
+  }
+  .scroll-gallery-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Default: touch, phone-width — snap one image at a time, centered. */
+  .scroll-gallery-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: calc(50% - 185px);
+  }
+  .scroll-gallery-slide {
+    scroll-snap-align: center;
+  }
+
+  /* Touch, tablet-width — free-scrolling, no snap. */
+  @media (min-width: 641px) {
+    .scroll-gallery-track {
+      scroll-snap-type: none;
+      padding-inline: 1rem;
+    }
+  }
+
+  /* Mouse/trackpad-primary devices — hand off entirely to GSAP above. */
+  @media (hover: hover) and (pointer: fine) {
+    .scroll-gallery-track {
+      overflow-x: visible;
+      scroll-snap-type: none;
+      padding-inline: 1rem;
+      width: auto;
+    }
+    .scroll-gallery-slide {
+      scroll-snap-align: none;
+    }
   }
 </style>
