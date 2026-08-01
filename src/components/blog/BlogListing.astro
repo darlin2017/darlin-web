@@ -13,20 +13,26 @@ interface Props {
 const { posts, archiveGroups, pagination } = Astro.props;
 ---
 
-<main class="pt-28 md:pt-28 pb-12 px-6 md:px-12 max-w-2xl mx-auto">
+<main class="max-md:min-h-[calc(100svh-104px)] md:h-[calc(100dvh-112px)] flex flex-col pt-28 pb-12 px-6 md:px-12 max-w-2xl mx-auto">
   <h1 class="text-2xl md:text-3xl font-medium tracking-wide text-stone-950 mb-2 text-center">Blog</h1>
 
-  <div class="mb-6">
-    <ArchiveList groups={archiveGroups} />
-  </div>
-
   {posts.length > 0 ? (
-    <div class="flex flex-col gap-12">
-      {posts.map((post, index) => <BlogCard post={post} eager={index === 0} />)}
-    </div>
-  ) : (
-    <p class="text-sm text-stone-400">記事がありません。</p>
-  )}
+    <>
+      <div class="mb-6">
+        <ArchiveList groups={archiveGroups} />
+      </div>
 
-  {pagination && <Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} />}
+      <div class="flex flex-col gap-12">
+        {posts.map((post, index) => <BlogCard post={post} eager={index === 0} />)}
+      </div>
+
+      {pagination && <Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} />}
+    </>
+  ) : (
+    <div class="flex-1 flex items-center justify-center">
+      <p class="text-base md:text-lg text-stone-600 leading-relaxed tracking-wider text-center">
+        New posts coming soon.
+      </p>
+    </div>
+  )}
 </main>

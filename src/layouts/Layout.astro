@@ -63,8 +63,6 @@ const enableGA = import.meta.env.PROD && Boolean(gaId);
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageURL} />
 
-  <link rel="preload" href="/fonts/switzer/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
-
   {enableGA && (
     <>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
