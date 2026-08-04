@@ -31,6 +31,7 @@ import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
 		href="/reserve"
 		target="_blank"
 		rel="noopener noreferrer"
+		data-ga-reserve-click="header"
 		class="hidden md:flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-5 py-2 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
 	  >
 		RESERVE
@@ -74,6 +75,7 @@ import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
         href="/reserve"
         target="_blank"
         rel="noopener noreferrer"
+        data-ga-reserve-click="header"
         class="md:hidden self-start -ml-3 border border-stone-950 text-stone-950 text-[11px] font-bold tracking-[0.2em] px-5 py-2 rounded-full bg-transparent shadow-sm mt-1 hover:bg-stone-950 hover:text-white transition-colors duration-300"
       >
         RESERVE
@@ -133,4 +135,16 @@ import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
   });
 
   syncNavOffset();
+
+  // GA4: fires for any reserve-button click on the page, including ones
+  // rendered by other components (e.g. Access page's per-store buttons) —
+  // event delegation means this one listener covers all of them.
+  document.addEventListener('click', (event) => {
+    const target = (event.target as HTMLElement)?.closest<HTMLElement>('[data-ga-reserve-click]');
+    if (!target) return;
+    const gtagFn = (window as any).gtag;
+    if (typeof gtagFn === 'function') {
+      gtagFn('event', 'reserve_click', { location: target.dataset.gaReserveClick });
+    }
+  });
 </script>

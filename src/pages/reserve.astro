@@ -8,18 +8,21 @@ import logoFeelLikeMakinLove from '../assets/logos/logo-feellikemakinlove.png';
 const stores = [
   {
     name: 'darlin.',
+    gaStore: 'darlin',
     logo: logoDarlin,
     reserveUrl: 'https://airrsv.net/darlinhair/calendar',
     heightClass: 'h-12 md:h-14',
   },
   {
     name: 'EDIE',
+    gaStore: 'edie',
     logo: logoEdie,
     reserveUrl: 'https://airrsv.net/edietokyo/calendar',
     heightClass: 'h-14 md:h-18',
   },
   {
     name: "Feel Like Makin' Love",
+    gaStore: 'feel_like_makin_love',
     logo: logoFeelLikeMakinLove,
     reserveUrl: 'https://airrsv.net/feellikemakinlove/calendar',
     heightClass: 'h-16 md:h-20',
@@ -73,7 +76,7 @@ const enableGA = import.meta.env.PROD && Boolean(gaId);
   <main class="min-h-[100dvh] flex flex-col items-center justify-center gap-18 md:gap-22 px-6">
     <h1 class="sr-only">Reserve | darlin. / EDIE / Feel Like Makin' Love</h1>
     {stores.map((store) => (
-      <a href={store.reserveUrl} class="hover:opacity-60 transition-opacity">
+      <a href={store.reserveUrl} data-ga-store-click={store.gaStore} class="hover:opacity-60 transition-opacity">
         <Image
           src={store.logo}
           alt={store.name}
@@ -83,5 +86,16 @@ const enableGA = import.meta.env.PROD && Boolean(gaId);
       </a>
     ))}
   </main>
+
+  <script>
+    document.addEventListener('click', (event) => {
+      const target = (event.target as HTMLElement)?.closest<HTMLElement>('[data-ga-store-click]');
+      if (!target) return;
+      const gtagFn = (window as any).gtag;
+      if (typeof gtagFn === 'function') {
+        gtagFn('event', 'reserve_store_click', { store: target.dataset.gaStoreClick });
+      }
+    });
+  </script>
 </body>
 </html>

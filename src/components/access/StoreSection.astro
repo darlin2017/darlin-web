@@ -19,6 +19,7 @@ const STORE_LOGOS: Record<string, { src: ImageMetadata; heightClass: string }> =
 
 const { store, eager = false } = Astro.props;
 const telHref = `tel:${store.data.phone.replace(/-/g, '')}`;
+const gaReserveLocation = `access_${store.id === 'feel-like-makin-love' ? 'flml' : store.id}`;
 const hoursLines = store.data.hours.split('\n');
 
 // Match both photos to the height of the more square one; the other is object-fit: cover-cropped to fit.
@@ -101,6 +102,7 @@ const hairSalonSchema = buildHairSalonSchema(
     href={store.data.reserveUrl}
     target="_blank"
     rel="noopener noreferrer"
+    data-ga-reserve-click={gaReserveLocation}
     class="mt-6 inline-flex border border-stone-950 text-stone-950 text-[10px] font-bold tracking-[0.2em] px-6 py-2.5 rounded-full hover:bg-stone-950 hover:text-white transition-all duration-300"
   >
     RESERVE
