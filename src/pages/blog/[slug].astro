@@ -59,6 +59,11 @@ const { post, prev, next } = Astro.props;
   .blog-content :global(p) {
     margin-bottom: 1.5em;
   }
+  .blog-content :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
   .blog-content :global(h2) {
     font-size: 1.125rem;
     font-weight: 500;
